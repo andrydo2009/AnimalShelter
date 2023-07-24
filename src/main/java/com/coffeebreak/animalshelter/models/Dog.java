@@ -1,15 +1,9 @@
 package com.coffeebreak.animalshelter.models;
 
-import lombok.*;
-
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 @Table(name = "dog")
 public class Dog {
     @Id
@@ -28,6 +22,64 @@ public class Dog {
 
     @Column(name = "description")
     private String description;  // описание питомца
+
+    public Dog() {
+    }
+
+    public Dog(Long id , String nickName , Integer age , String dogBreed , String description) {
+        this.id = id;
+        this.nickName = nickName;
+        this.age = age;
+        this.dogBreed = dogBreed;
+        this.description = description;
+    }
+
+    public Dog(String nickName , Integer age , String dogBreed , String description) {
+        this.nickName = nickName;
+        this.age = age;
+        this.dogBreed = dogBreed;
+        this.description = description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getDogBreed() {
+        return dogBreed;
+    }
+
+    public void setDogBreed(String dogBreed) {
+        this.dogBreed = dogBreed;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     @Override
     public boolean equals(Object o) {
