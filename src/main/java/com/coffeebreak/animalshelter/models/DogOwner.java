@@ -10,10 +10,8 @@ public class DogOwner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "first_name", nullable = false)
-    private String firstName; // имя хозяина животного
-    @Column(name = "last_name", nullable = false)
-    private String lastName; // фамилия хозяина животного
+    @Column(name = "full_name", nullable = false)
+    private String fullName; // полное имя хозяина животного
     @Column(name = "age")
     private Integer age; // возраст хозяина животного
     @Column(name = "address", nullable = false)
@@ -24,18 +22,16 @@ public class DogOwner {
     public DogOwner() {
     }
 
-    public DogOwner(String firstName, String lastName, Integer age, String address, String phoneNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public DogOwner(String fullName, Integer age, String address, String phoneNumber) {
+        this.fullName = fullName;
         this.age = age;
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
 
-    public DogOwner(Long id, String firstName, String lastName, Integer age, String address, String phoneNumber) {
+    public DogOwner(Long id, String fullName, Integer age, String address, String phoneNumber) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.fullName = fullName;
         this.age = age;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -49,20 +45,12 @@ public class DogOwner {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public Integer getAge() {
@@ -94,20 +82,19 @@ public class DogOwner {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DogOwner dogOwner = (DogOwner) o;
-        return Objects.equals(id, dogOwner.id) && Objects.equals(firstName, dogOwner.firstName) && Objects.equals(lastName, dogOwner.lastName) && Objects.equals(age, dogOwner.age) && Objects.equals(address, dogOwner.address) && Objects.equals(phoneNumber, dogOwner.phoneNumber);
+        return Objects.equals(id, dogOwner.id) && Objects.equals(fullName, dogOwner.fullName) && Objects.equals(age, dogOwner.age) && Objects.equals(address, dogOwner.address) && Objects.equals(phoneNumber, dogOwner.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, age, address, phoneNumber);
+        return Objects.hash(id, fullName, age, address, phoneNumber);
     }
 
     @Override
     public String toString() {
         return "DogOwner{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", fullName='" + fullName + '\'' +
                 ", age=" + age +
                 ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +

@@ -28,15 +28,15 @@ public class Cat {
     public Cat() {
     }
 
-    public Cat(Long id , String nickName , Integer age , String catBreed , String description) {
-        this.id = id;
+    public Cat(String nickName , Integer age , String catBreed , String description) {
         this.nickName = nickName;
         this.age = age;
         this.catBreed = catBreed;
         this.description = description;
     }
 
-    public Cat(String nickName , Integer age , String catBreed , String description) {
+    public Cat(Long id , String nickName , Integer age , String catBreed , String description) {
+        this.id = id;
         this.nickName = nickName;
         this.age = age;
         this.catBreed = catBreed;

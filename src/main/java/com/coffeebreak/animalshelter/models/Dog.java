@@ -26,15 +26,15 @@ public class Dog {
     public Dog() {
     }
 
-    public Dog(Long id , String nickName , Integer age , String dogBreed , String description) {
-        this.id = id;
+    public Dog(String nickName , Integer age , String dogBreed , String description) {
         this.nickName = nickName;
         this.age = age;
         this.dogBreed = dogBreed;
         this.description = description;
     }
 
-    public Dog(String nickName , Integer age , String dogBreed , String description) {
+    public Dog(Long id , String nickName , Integer age , String dogBreed , String description) {
+        this.id = id;
         this.nickName = nickName;
         this.age = age;
         this.dogBreed = dogBreed;
