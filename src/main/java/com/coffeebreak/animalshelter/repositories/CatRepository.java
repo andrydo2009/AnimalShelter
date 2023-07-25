@@ -1,4 +1,4 @@
 package com.coffeebreak.animalshelter.repositories;
 
-public class CatRepository {
+public interface CatRepository {
 }
