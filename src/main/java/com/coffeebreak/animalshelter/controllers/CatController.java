@@ -52,6 +52,10 @@ public class CatController {
                                     @Schema(implementation = Cat.class))
                             )
                     }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
             )
     })
     public ResponseEntity<Collection<Cat>> getAllCats() {
