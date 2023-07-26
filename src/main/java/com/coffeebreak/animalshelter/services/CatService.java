@@ -14,6 +14,13 @@ public class CatService {
         this.catRepository = catRepository;
     }
 
+    /**
+     * Получение списка кошек из БД
+     * <br>
+     * Используется метод репозитория {@link CatRepository#findAll()}
+     *
+     * @return список кошек
+     */
     public Collection<Cat> findAllCats() {
         return catRepository.findAll();
     }

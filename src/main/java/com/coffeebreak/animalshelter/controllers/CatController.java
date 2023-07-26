@@ -18,7 +18,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/cat")
-@Tag(name = "Cats", description = "CRUD-operations to work with the cats")
+@Tag(name = "Cats", description = "CRUD-операции для работы с кошками")
 public class CatController {
     private final CatService catService;
     public CatController(CatService catService) {
@@ -27,13 +27,13 @@ public class CatController {
 
     @GetMapping
     @Operation(
-            summary = "Find all cats",
-            description = "Show all cats"
+            summary = "Найти список всех кошек",
+            description = "Показать список всех кошек"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Cats were successfully found",
+                    description = "Кошки успешно найдены",
                     content = {
                             @Content(
                                     mediaType = "application/json",
@@ -44,7 +44,7 @@ public class CatController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Cats were not found",
+                    description = "Кошки не найдены",
                     content = {
                             @Content(
                                     mediaType = "application/json",
