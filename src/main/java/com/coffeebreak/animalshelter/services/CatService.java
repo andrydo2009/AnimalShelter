@@ -9,10 +9,17 @@ import java.util.Collection;
 @Service
 public class CatService {
     private final CatRepository catRepository;
-
+    
     public CatService(CatRepository catRepository) {
-        this.catRepository = catRepository;
+     this.catRepository = catRepository;
     }
+
+    public Cat createCat(Cat cat) {
+        return catRepository.save(cat);
+    }
+
+    public Cat getCatById(Long id) {
+        return catRepository.findById(id).orElse(null);
 
     /**
      * Получение списка кошек из БД

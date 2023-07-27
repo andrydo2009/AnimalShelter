@@ -21,10 +21,26 @@ import java.util.Collection;
 @Tag(name = "Cats", description = "CRUD-операции для работы с кошками")
 public class CatController {
     private final CatService catService;
+  
     public CatController(CatService catService) {
         this.catService = catService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Cat> getCatById(@PathVariable Long id) {
+        Cat cat = catService.getCatById(id);
+        if (cat!= null) {
+            return ResponseEntity.ok(cat);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Cat> createCat(@RequestBody Cat cat) {
+        Cat createdCat = catService.createCat(cat);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCat);
+      
     @GetMapping
     @Operation(
             summary = "Найти список всех кошек",
