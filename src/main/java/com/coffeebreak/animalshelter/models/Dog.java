@@ -1,5 +1,7 @@
 package com.coffeebreak.animalshelter.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -22,6 +24,8 @@ public class Dog {
 
     @Column(name = "description")
     private String description;  // описание питомца
+
+
 
     public Dog() {
     }
@@ -104,4 +108,6 @@ public class Dog {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+
 }

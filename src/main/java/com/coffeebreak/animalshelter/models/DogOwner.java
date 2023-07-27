@@ -19,6 +19,9 @@ public class DogOwner {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // контактный номер телефона хозяина животного
 
+
+
+
     public DogOwner() {
     }
 
