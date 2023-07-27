@@ -40,6 +40,7 @@ public class CatController {
     public ResponseEntity<Cat> createCat(@RequestBody Cat cat) {
         Cat createdCat = catService.createCat(cat);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCat);
+    }
       
     @GetMapping
     @Operation(
