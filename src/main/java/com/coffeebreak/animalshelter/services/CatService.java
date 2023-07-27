@@ -20,6 +20,7 @@ public class CatService {
 
     public Cat getCatById(Long id) {
         return catRepository.findById(id).orElse(null);
+    }
 
     /**
      * Получение списка кошек из БД
