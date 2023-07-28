@@ -4,7 +4,7 @@ import com.coffeebreak.animalshelter.models.Dog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Интерфейс, содержащий методы для работы с базой данных животных
+ * Интерфейс, содержащий методы для работы с базой данных объектов класса Dog
  * @see Dog
  * @see com.coffeebreak.animalshelter.services.DogService
  */

@@ -1,7 +1,6 @@
 package com.coffeebreak.animalshelter.services;
 
 import com.coffeebreak.animalshelter.exceptions.DogNotFoundException;
-import com.coffeebreak.animalshelter.models.Cat;
 import com.coffeebreak.animalshelter.models.Dog;
 import com.coffeebreak.animalshelter.repositories.DogRepository;
 import org.springframework.stereotype.Service;
@@ -9,84 +8,76 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 /**
- *Класс - сервис, содержащий набор CRUD операций над объектом Dog
+ * Класс-сервис, содержащий CRUD-методы объекта класса Dog
  * @see Dog
  * @see DogRepository
  */
 @Service
 public class DogService {
+
     private final DogRepository dogRepository;
-    private long lastId = 0;
+
     public DogService(DogRepository dogRepository) {
         this.dogRepository = dogRepository;
     }
 
     /**
-     * Метод создает новую собаку
-     * @param dog
-     * @return {@link DogRepository#save(Object)}
-     * @see DogService
+     * Создание объекта класса Dog и сохранение его в БД
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#save(Object)}
+     * @param dog объект класса Dog, не может быть null
+     * @return созданный объект класса Dog
      */
-    public Dog createDog (Dog dog) {
-        dog.setId(++lastId);
+    public Dog createDog(Dog dog) {
         return dogRepository.save(dog);
     }
 
     /**
-     * Метод находит и возвращает собаку по id
-     * @param id
-     * @return {@link DogRepository#findById(Object)}
-     * @throws DogNotFoundException если собака с указанным id не найдена
-     * @see DogService
+     * Поиск объекта класса Dog по его идентификатору
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findById(Object)}
+     * @param dogId идентификатор искомого объекта класса Dog, не может быть null
+     * @return найденный объект класса Dog
+     * @throws DogNotFoundException если объект класса dog не был найден в БД
      */
-    public Dog getDogById(Long id) {
-        return dogRepository.findById(id)
-                .orElseThrow(DogNotFoundException::new);
+    public Dog findDogById(Long dogId) {
+        return dogRepository.findById(dogId).orElseThrow(DogNotFoundException::new);
     }
 
     /**
-     * Метод находит и удаляет собаку по id
-     * @param id
-     * @return true если удаление прошло успешно
-     * @throws DogNotFoundException если собака с указанным id не найдена
+     * Получение коллекции объектов класса Dog из БД
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findAll()}
+     * @return коллекция объектов класса Dog
      */
-    public boolean remove(Long id) {
-        if (dogRepository.existsById(id)) {
-            if (dogRepository.getReferenceById(id).getId() != null) {
-                dogRepository.getReferenceById(id).getId().longValue();
+    public Collection<Dog> findAllDogs() {
+        return dogRepository.findAll();
+    }
+
+    /**
+     * Изменение объекта класса Dog и сохранение его в БД
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#save(Object)}
+     * @param dog объект класса Dog, не может быть null
+     * @return изменённый объект класса Dog
+     * @throws DogNotFoundException если объект класса dog не был найден в БД
+     */
+    public Dog updateDog(Dog dog) {
+        if (dog.getId() != null) {
+            if (findDogById(dog.getId()) != null) {
+                return dogRepository.save(dog);
             }
-            dogRepository.deleteById(id);
-            return true;
         }
         throw new DogNotFoundException();
     }
 
     /**
-     * Метод обновляет собаку
-     * @param dog
-     * @return {@link DogRepository#save(Object)}
-     * @throws DogNotFoundException если собака с указанным id не найдена
-     * @see DogService
+     * Удаление объекта класса Dog по его идентификатору
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#deleteById(Object)}
+     * @param dogId идентификатор искомого объекта класса Dog, не может быть null
      */
-    public Dog editDog(Dog dog) {
-        if (dog.getId() != null && getDogById(dog.getId()) != null) {
-            Dog findDog = getDogById(dog.getId());
-            findDog.setNickName(dog.getNickName());
-            findDog.setDogBreed(dog.getDogBreed());
-            findDog.setAge(dog.getAge());
-            findDog.setDescription(dog.getDescription());
-            return this.dogRepository.save(findDog);
-        }
-        throw new DogNotFoundException();
+    public void deleteDogById(Long dogId) {
+        dogRepository.deleteById(dogId);
     }
-
-    /**
-     * Метод находит и возвращает всех собак
-     * @return {@link DogRepository#findById(Object)}
-     * @see DogService
-     */
-    public Collection<Dog> getAllDog() {
-        return this.dogRepository.findAll();
-    }
-
 }
