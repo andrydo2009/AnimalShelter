@@ -51,7 +51,7 @@ public class DogController {
                     }
             )
     })
-    public ResponseEntity<Dog> createDog (@RequestBody Dog dog) {
+    public ResponseEntity<Dog> createDog(@RequestBody Dog dog) {
         Dog createdDog = dogService.createDog(dog);
         return ResponseEntity.ok(createdDog);
     }
@@ -149,7 +149,7 @@ public class DogController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Данные собаки успешно изменены",
+                    description = "Данные собаки успешно изменены (обновлены)",
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
