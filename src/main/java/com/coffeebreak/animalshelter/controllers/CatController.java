@@ -9,10 +9,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -21,10 +20,27 @@ import java.util.Collection;
 @Tag(name = "Cats", description = "CRUD-операции для работы с кошками")
 public class CatController {
     private final CatService catService;
+  
     public CatController(CatService catService) {
         this.catService = catService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Cat> getCatById(@PathVariable Long id) {
+        Cat cat = catService.getCatById(id);
+        if (cat!= null) {
+            return ResponseEntity.ok(cat);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Cat> createCat(@RequestBody Cat cat) {
+        Cat createdCat = catService.createCat(cat);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCat);
+    }
+      
     @GetMapping
     @Operation(
             summary = "Найти список всех кошек",
