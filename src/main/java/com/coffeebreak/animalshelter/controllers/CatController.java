@@ -1,7 +1,6 @@
 package com.coffeebreak.animalshelter.controllers;
 
 import com.coffeebreak.animalshelter.models.Cat;
-import com.coffeebreak.animalshelter.models.Dog;
 import com.coffeebreak.animalshelter.services.CatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -153,7 +152,7 @@ public class CatController {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     array = @ArraySchema(schema =
-                                    @Schema(implementation = Dog.class))
+                                    @Schema(implementation = Cat.class))
                             )
                     }
             ),
@@ -164,7 +163,7 @@ public class CatController {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                                     array = @ArraySchema(schema =
-                                    @Schema(implementation = Dog.class))
+                                    @Schema(implementation = Cat.class))
                             )
                     }
             ),
@@ -173,7 +172,7 @@ public class CatController {
                     description = "Внутренняя ошибка сервера"
             )
     })
-    public ResponseEntity<Cat> updateCat(@PathVariable Long id, @RequestBody Cat cat) {
+    public ResponseEntity<Cat> updateCat(@RequestBody Cat cat) {
         Cat updatedCat = catService.updateCat(cat);
         if (updatedCat != null) {
             return ResponseEntity.ok(updatedCat);

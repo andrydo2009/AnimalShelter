@@ -54,6 +54,7 @@ public class CatService {
     public Collection<Cat> findAllCats() {
         return catRepository.findAll();
     }
+
     public Cat updateCat(Cat cat) {
         if (cat.getId() != null) {
             if (findCatById(cat.getId()) != null) {
@@ -62,6 +63,7 @@ public class CatService {
         }
         throw new DogNotFoundException();
     }
+
     public void deleteCatById(Long catId) {
         catRepository.deleteById(catId);
     }
