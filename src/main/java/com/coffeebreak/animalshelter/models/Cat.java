@@ -35,16 +35,16 @@ public class Cat {
         this.description = description;
     }
 
+
+    public Long getId() {
+        return id;
+    }
     public Cat(Long id , String nickName , Integer age , String catBreed , String description) {
         this.id = id;
         this.nickName = nickName;
         this.age = age;
         this.catBreed = catBreed;
         this.description = description;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public void setId(Long id) {

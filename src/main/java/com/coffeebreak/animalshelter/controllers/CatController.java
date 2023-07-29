@@ -1,6 +1,7 @@
 package com.coffeebreak.animalshelter.controllers;
 
 import com.coffeebreak.animalshelter.models.Cat;
+import com.coffeebreak.animalshelter.models.Dog;
 import com.coffeebreak.animalshelter.services.CatService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,7 +28,7 @@ import java.util.Collection;
 @Tag(name = "Cats", description = "CRUD-операции для работы с кошками")
 public class CatController {
     private final CatService catService;
-  
+
     public CatController(CatService catService) {
         this.catService = catService;
     }
@@ -138,5 +139,70 @@ public class CatController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(cats);
+    }
+    @PutMapping
+    @Operation(
+            summary = "Изменить (обновить) данные кошки",
+            description = "Изменение (обновление) данных кошки"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Данные кошки успешно изменены (обновлены)",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = Dog.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Кошка не найдена",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = Dog.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
+            )
+    })
+    public ResponseEntity<Cat> updateCat(@PathVariable Long id, @RequestBody Cat cat) {
+        Cat updatedCat = catService.updateCat(cat);
+        if (updatedCat != null) {
+            return ResponseEntity.ok(updatedCat);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{catId}")
+    @Operation(
+            summary = "Удаление кошки по ее уникальному идентификатору",
+            description = "Поиск кошки для удаления по ее уникальному идентификатору"
+    )
+    @Parameters(value = {
+            @Parameter(name = "Уникальный идентификатор кошки", example = "1")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Кошка успешно удалена"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Кошка не найдена"
+            )
+    })
+    public ResponseEntity<Void> deleteCatById(@PathVariable("catId") Long catId) {
+        catService.deleteCatById(catId);
+        return ResponseEntity.ok().build();
+
     }
 }

@@ -1,6 +1,7 @@
 package com.coffeebreak.animalshelter.services;
 
 import com.coffeebreak.animalshelter.exceptions.CatNotFoundException;
+import com.coffeebreak.animalshelter.exceptions.DogNotFoundException;
 import com.coffeebreak.animalshelter.models.Cat;
 import com.coffeebreak.animalshelter.repositories.CatRepository;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,16 @@ public class CatService {
      */
     public Collection<Cat> findAllCats() {
         return catRepository.findAll();
+    }
+    public Cat updateCat(Cat cat) {
+        if (cat.getId() != null) {
+            if (findCatById(cat.getId()) != null) {
+                return catRepository.save(cat);
+            }
+        }
+        throw new DogNotFoundException();
+    }
+    public void deleteCatById(Long catId) {
+        catRepository.deleteById(catId);
     }
 }
