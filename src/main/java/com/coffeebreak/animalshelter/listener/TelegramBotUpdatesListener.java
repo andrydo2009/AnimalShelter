@@ -23,11 +23,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final TelegramBot telegramBot;
     private final Logger logger = LoggerFactory.getLogger ( TelegramBotUpdatesListener.class );
 
-    InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-
-
-
-
     public TelegramBotUpdatesListener(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
     }
