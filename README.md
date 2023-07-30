@@ -2,7 +2,7 @@
 ## ОПИСАНИЕ ПРОЕКТА
 * Название проекта: Приют для животных
 * Функциональные возможности проекта: В этом проекте telegram-бот способен отвечать на популярные вопросы людей о том, что им нужно знать о животном и какими навыками они должны обладать, прежде чем забрать животное из приюта. Также telegram-бот способен отправлять ежедневный отчет о том, как животное адаптируется к новой среде обитания.
-* В проекте реализованы следующие технологии: Spring framework, Maven, REST API, Swagger UI, PostgreSQL, Liquibase, Pengrad Java Telegram bot API
+* В проекте реализованы следующие технологии: Spring framework, Maven, REST API, Swagger UI, PostgresSQL, Liquibase, Pengrad Java Telegram bot API
 * Язык программирования: Данный проект написан на языке программирования Java.
 
  ------
@@ -13,7 +13,7 @@
 
  ------
 
-## Комада разработчиков "Coffee Break":
+## Команда разработчиков "Coffee Break":
 
 - [Борисова Ирина](https://github.com/Qwaieare)
 - [Овчинников Андрей](https://github.com/andrydo2009)
@@ -27,7 +27,7 @@
 # PROJECT DESCRIPTION
 * Project name: Animal shelter
 * Project functions: In this project telegram bot is able to answer popular questions from people about what they need to know about an animal and what skills do they need to have before picking up an animal from a shelter. Also telegram bot is able to send a daily report on how the animal adapts to the new environment.
-* Project implementation: Spring framework, Maven, REST API, Swagger UI, PostgreSQL, Liquibase, Pengrad Java Telegram bot API.
+* Project implementation: Spring framework, Maven, REST API, Swagger UI, PostgresSQL, Liquibase, Pengrad Java Telegram bot API.
 * Project language: The project is written in the java programming language.
 
  ------
