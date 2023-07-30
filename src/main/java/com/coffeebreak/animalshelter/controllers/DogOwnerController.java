@@ -134,7 +134,7 @@ public class DogOwnerController {
     public ResponseEntity<Collection<DogOwner>> getAllDogOwners() {
         Collection<DogOwner> dogOwners = dogOwnerService.findAllDogOwners();
         if (dogOwners.isEmpty()) {
-            ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(dogOwners);
     }
