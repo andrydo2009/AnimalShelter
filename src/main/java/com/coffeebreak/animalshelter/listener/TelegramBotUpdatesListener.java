@@ -21,7 +21,7 @@ import java.util.List;
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final TelegramBot telegramBot;
-    private final Logger logger = LoggerFactory.getLogger ( TelegramBotUpdatesListener.class );
+    private final Logger logger = LoggerFactory.getLogger (TelegramBotUpdatesListener.class);
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
@@ -29,41 +29,41 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @PostConstruct
     public void init() {
-        telegramBot.setUpdatesListener ( this );
+        telegramBot.setUpdatesListener(this);
     }
 
     @Override
     public int process(List<Update> updates) {
 
         for (Update update : updates) {
-            if (update.message () != null) {
-                logger.info ( "Handles update: {}" , update );
-                Message message = update.message ();
-                Long chatId = message.chat ().id ();
-                String messageText = message.text ();
+            if (update.message() != null) {
+                logger.info ("Handles update: {}", update);
+                Message message = update.message();
+                Long chatId = message.chat().id();
+                String messageText = message.text();
 
-                    switch (messageText) {
+                    switch(messageText) {
                         case "/start":
-                            sendMessage ( chatId , "Добро пожаловать! Я бот приюта для животных. Выберите приют: Приют для кошек или Приют для собак." );
+                            sendMessage(chatId , "Добро пожаловать! Я бот приюта для животных. Выберите приют: Приют для кошек или Приют для собак.");
                             sendInlineKeyboard(chatId);
                             break;
                         case "Приют для кошек":
-                            //sendMenuMessage ( responses , chatId );
+                            // sendMenuMessage(responses, chatId);
                             break;
                         case "Приют для собак":
-                            //sendMenuMessage ( responses , chatId );
+                            // sendMenuMessage(responses, chatId);
                             break;
                         case "Узнать информацию о приюте (этап 1)":
-                            //sendInfoMessage ( responses , chatId );
+                            // sendInfoMessage(responses, chatId);
                             break;
                         case "Как взять животное из приюта (этап 2)":
-                            //sendTakePetMessage ( responses , chatId );
+                            // sendTakePetMessage(responses, chatId);
                             break;
                         case "Прислать отчет о питомце (этап 3)":
-                            //sendReportMessage ( responses , chatId );
+                            // sendReportMessage(responses, chatId);
                             break;
-                        case "Позвать волонтера":
-                            //sendVolunteerMessage ( responses , chatId );
+                        case "Позвать добровольца":
+                            // sendVolunteerMessage(responses, chatId);
                             break;
                         default:
                             // Обработка незапланированного сценария
@@ -98,5 +98,4 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             logger.error("Error during sending message: {}", sendResponse.description());
         }
     }
-
 }

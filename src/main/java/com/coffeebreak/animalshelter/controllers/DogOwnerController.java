@@ -1,6 +1,5 @@
 package com.coffeebreak.animalshelter.controllers;
 
-import com.coffeebreak.animalshelter.models.Dog;
 import com.coffeebreak.animalshelter.models.DogOwner;
 import com.coffeebreak.animalshelter.services.DogOwnerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,8 +50,8 @@ public class DogOwnerController {
             )
     })
     public ResponseEntity<DogOwner> createDogOwner(@RequestBody DogOwner dogOwner) {
-        DogOwner createdDogowner = dogOwnerService.createDogOwner ( dogOwner );
-        return ResponseEntity.ok(createdDogowner);
+        DogOwner createdDogOwner = dogOwnerService.createDogOwner(dogOwner);
+        return ResponseEntity.ok(createdDogOwner);
     }
 
     @GetMapping("/{dogOwnerId}")
@@ -93,9 +91,9 @@ public class DogOwnerController {
             )
     })
     public ResponseEntity<DogOwner> getDogOwnerById(@PathVariable("dogOwnerId") Long dogOwnerId) {
-        DogOwner foundDogOwner=dogOwnerService.findDogOwnerById ( dogOwnerId );
-        if (foundDogOwner==null){
-            return ResponseEntity.notFound ().build ();
+        DogOwner foundDogOwner = dogOwnerService.findDogOwnerById(dogOwnerId);
+        if (foundDogOwner == null){
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(foundDogOwner);
     }
@@ -134,9 +132,9 @@ public class DogOwnerController {
             )
     })
     public ResponseEntity<Collection<DogOwner>> getAllDogOwners() {
-        Collection<DogOwner> dogOwners = dogOwnerService.findAllDogOwner ();
-        if (dogOwners.isEmpty ()) {
-            ResponseEntity.noContent ().build ();
+        Collection<DogOwner> dogOwners = dogOwnerService.findAllDogOwners();
+        if (dogOwners.isEmpty()) {
+            ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(dogOwners);
     }
@@ -175,11 +173,11 @@ public class DogOwnerController {
             )
     })
     public ResponseEntity<DogOwner> updateDogOwner(@RequestBody DogOwner dogOwner) {
-        DogOwner updateDogOwner=dogOwnerService.updateDogOwner ( dogOwner );
-        if (updateDogOwner == null) {
-            return ResponseEntity.notFound ().build ();
+        DogOwner updatedDogOwner = dogOwnerService.updateDogOwner(dogOwner);
+        if (updatedDogOwner == null) {
+            return ResponseEntity.notFound().build ();
         }
-        return ResponseEntity.ok(updateDogOwner);
+        return ResponseEntity.ok(updatedDogOwner);
     }
 
     @DeleteMapping("/{dogOwnerId}")
@@ -205,7 +203,7 @@ public class DogOwnerController {
             )
     })
     public ResponseEntity<Void> deleteDogOwnerById(@PathVariable("dogOwnerId") Long dogOwnerId) {
-        dogOwnerService.deleteDogOwner ( dogOwnerId );
+        dogOwnerService.deleteDogOwner(dogOwnerId);
         return ResponseEntity.ok().build();
     }
 }

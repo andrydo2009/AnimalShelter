@@ -16,27 +16,27 @@ public class DogOwnerService {
     }
 
     public DogOwner createDogOwner(DogOwner dogOwner) {
-        return dogOwnerRepository.save ( dogOwner );
+        return dogOwnerRepository.save(dogOwner);
     }
 
     public DogOwner findDogOwnerById(Long dogOwnerId) {
-        return dogOwnerRepository.findById ( dogOwnerId ).orElseThrow ( DogOwnerNotFoundException::new );
+        return dogOwnerRepository.findById(dogOwnerId).orElseThrow(DogOwnerNotFoundException::new);
     }
 
-    public Collection<DogOwner> findAllDogOwner() {
-        return dogOwnerRepository.findAll ();
-    }
-
-    public void deleteDogOwner(Long dogOwnerId) {
-        dogOwnerRepository.deleteById ( dogOwnerId );
+    public Collection<DogOwner> findAllDogOwners() {
+        return dogOwnerRepository.findAll();
     }
 
     public DogOwner updateDogOwner(DogOwner dogOwner) {
-        if (dogOwner.getId () != null) {
-            if (findDogOwnerById ( dogOwner.getId () ) != null) {
-                return dogOwnerRepository.save ( dogOwner );
+        if (dogOwner.getId() != null) {
+            if(findDogOwnerById(dogOwner.getId()) != null) {
+                return dogOwnerRepository.save(dogOwner);
             }
         }
-        throw new DogOwnerNotFoundException ();
+        throw new DogOwnerNotFoundException();
+    }
+
+    public void deleteDogOwner(Long dogOwnerId) {
+        dogOwnerRepository.deleteById(dogOwnerId);
     }
 }
