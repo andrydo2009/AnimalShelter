@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+/**
+ * Класс-контроллер для объектов класса DogOwner
+ * @see DogOwner
+ * @see DogOwnerService
+ */
 @RestController
 @RequestMapping("/dog_owner")
 @Tag(name = "DogOwners", description = "CRUD-операции для работы с владельцами собак.")
