@@ -136,7 +136,7 @@ public class DogController {
     public ResponseEntity<Collection<Dog>> getAllDogs() {
         Collection<Dog> dogs = dogService.findAllDogs();
         if (dogs == null) {
-            ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(dogs);
     }

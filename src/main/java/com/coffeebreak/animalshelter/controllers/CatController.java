@@ -26,6 +26,7 @@ import java.util.Collection;
 @RequestMapping("/cat")
 @Tag(name = "Cats", description = "CRUD-операции для работы с кошками")
 public class CatController {
+
     private final CatService catService;
 
     public CatController(CatService catService) {
@@ -174,11 +175,10 @@ public class CatController {
     })
     public ResponseEntity<Cat> updateCat(@RequestBody Cat cat) {
         Cat updatedCat = catService.updateCat(cat);
-        if (updatedCat != null) {
-            return ResponseEntity.ok(updatedCat);
-        } else {
+        if (updatedCat == null) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(updatedCat);
     }
 
     @DeleteMapping("/{catId}")
@@ -202,6 +202,5 @@ public class CatController {
     public ResponseEntity<Void> deleteCatById(@PathVariable("catId") Long catId) {
         catService.deleteCatById(catId);
         return ResponseEntity.ok().build();
-
     }
 }
