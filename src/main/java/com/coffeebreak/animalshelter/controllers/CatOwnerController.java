@@ -16,10 +16,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+/**
+ * Класс-контроллер для объектов класса CatOwner
+ * @see CatOwner
+ * @see CatOwnerService
+ */
 @RestController
 @RequestMapping("/cat_owner")
-@Tag(name = "Cat owner", description = "CRUD-операции для работы с владельцами кошек")
+@Tag(name = "Cat owners", description = "CRUD-операции для работы с владельцами кошек")
 
 public class CatOwnerController {
     private final CatOwnerService catOwnerService;
@@ -61,19 +65,18 @@ public class CatOwnerController {
                     description = "Внутренняя ошибка сервера"
             )
     })
-    public ResponseEntity<CatOwner> updateCatOwner (@RequestBody CatOwner catOwner) {
-        CatOwner updateCatOwner = catOwnerService.updateCatOwner(catOwner);
-        if (updateCatOwner != null) {
-            return ResponseEntity.ok(updateCatOwner);
-        } else {
+    public ResponseEntity<CatOwner> updateCatOwner(@RequestBody CatOwner catOwner) {
+        CatOwner updatedCatOwner = catOwnerService.updateCatOwner(catOwner);
+        if (updatedCatOwner == null) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(updatedCatOwner);
     }
 
-    @DeleteMapping("/{catId}")
+    @DeleteMapping("/{catOwnerId}")
     @Operation(
-            summary = "Удаление владельца кошки по ее уникальному идентификатору",
-            description = "Поиск владельца кошки для удаления по ее уникальному идентификатору"
+            summary = "Удаление владельца кошки по его уникальному идентификатору",
+            description = "Поиск владельца кошки для удаления по его уникальному идентификатору"
     )
     @Parameters(value = {
             @Parameter(name = "Уникальный идентификатор владельца кошки", example = "1")
@@ -92,5 +95,4 @@ public class CatOwnerController {
         catOwnerService.deleteCatOwnerById(catOwnerId);
         return ResponseEntity.ok().build();
     }
-
 }
