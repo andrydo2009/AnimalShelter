@@ -26,7 +26,7 @@ public class CatOwnerService {
 //     * @return изменённый объект класса CatOwner
 //     * @throws CatOwnerNotFoundException если объект класса CatOwner не был найден в БД
 //     */
-//    public CatOwner updateCatOwner (CatOwner catOwner) {
+//    public CatOwner updateCatOwner(CatOwner catOwner) {
 //        if (catOwner.getId() != null) {
 //            if (findCatOwnerById(catOwner.getId()) != null) { // Нет метода по поиску по ID
 //                return catOwnerRepository.save(catOwner);

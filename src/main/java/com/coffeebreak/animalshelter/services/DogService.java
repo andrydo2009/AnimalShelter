@@ -63,7 +63,7 @@ public class DogService {
      * @throws DogNotFoundException если объект класса dog не был найден в БД
      */
     public Dog updateDog(Dog dog) {
-        if(dog.getId() != null) {
+        if (dog.getId() != null) {
             if (findDogById(dog.getId()) != null) {
                 return dogRepository.save(dog);
             }

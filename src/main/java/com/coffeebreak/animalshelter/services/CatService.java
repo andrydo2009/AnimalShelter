@@ -63,7 +63,7 @@ public class CatService {
      * @throws CatNotFoundException если объект класса Cat не был найден в БД
      */
     public Cat updateCat(Cat cat) {
-        if(cat.getId() != null) {
+        if (cat.getId() != null) {
             if (findCatById(cat.getId()) != null) {
                 return catRepository.save(cat);
             }

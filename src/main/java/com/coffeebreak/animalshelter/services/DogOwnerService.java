@@ -29,7 +29,7 @@ public class DogOwnerService {
 
     public DogOwner updateDogOwner(DogOwner dogOwner) {
         if (dogOwner.getId() != null) {
-            if(findDogOwnerById(dogOwner.getId()) != null) {
+            if (findDogOwnerById(dogOwner.getId()) != null) {
                 return dogOwnerRepository.save(dogOwner);
             }
         }
