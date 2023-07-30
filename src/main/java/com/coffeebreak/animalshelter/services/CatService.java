@@ -1,7 +1,6 @@
 package com.coffeebreak.animalshelter.services;
 
 import com.coffeebreak.animalshelter.exceptions.CatNotFoundException;
-import com.coffeebreak.animalshelter.exceptions.DogNotFoundException;
 import com.coffeebreak.animalshelter.models.Cat;
 import com.coffeebreak.animalshelter.repositories.CatRepository;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class CatService {
     private final CatRepository catRepository;
 
     public CatService(CatRepository catRepository) {
-     this.catRepository = catRepository;
+        this.catRepository = catRepository;
     }
 
     /**
@@ -55,15 +54,29 @@ public class CatService {
         return catRepository.findAll();
     }
 
+    /**
+     * Изменение объекта класса Cat и сохранение его в БД
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#save(Object)}
+     * @param cat объект класса Cat, не может быть null
+     * @return изменённый объект класса Cat
+     * @throws CatNotFoundException если объект класса cat не был найден в БД
+     */
     public Cat updateCat(Cat cat) {
-        if (cat.getId() != null) {
+        if(cat.getId() != null) {
             if (findCatById(cat.getId()) != null) {
                 return catRepository.save(cat);
             }
         }
-        throw new DogNotFoundException();
+        throw new CatNotFoundException();
     }
 
+    /**
+     * Удаление объекта класса Cat по его идентификатору
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#deleteById(Object)}
+     * @param catId идентификатор искомого объекта класса Cat, не может быть null
+     */
     public void deleteCatById(Long catId) {
         catRepository.deleteById(catId);
     }

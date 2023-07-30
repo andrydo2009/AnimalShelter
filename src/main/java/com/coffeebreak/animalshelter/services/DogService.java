@@ -38,7 +38,7 @@ public class DogService {
      * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findById(Object)}
      * @param dogId идентификатор искомого объекта класса Dog, не может быть null
      * @return найденный объект класса Dog
-     * @throws DogNotFoundException если объект класса dog не был найден в БД
+     * @throws DogNotFoundException если объект класса Dog не был найден в БД
      */
     public Dog findDogById(Long dogId) {
         return dogRepository.findById(dogId).orElseThrow(DogNotFoundException::new);
@@ -63,7 +63,7 @@ public class DogService {
      * @throws DogNotFoundException если объект класса dog не был найден в БД
      */
     public Dog updateDog(Dog dog) {
-        if (dog.getId() != null) {
+        if(dog.getId() != null) {
             if (findDogById(dog.getId()) != null) {
                 return dogRepository.save(dog);
             }
