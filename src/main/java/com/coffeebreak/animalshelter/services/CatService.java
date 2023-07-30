@@ -60,7 +60,7 @@ public class CatService {
      * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#save(Object)}
      * @param cat объект класса Cat, не может быть null
      * @return изменённый объект класса Cat
-     * @throws CatNotFoundException если объект класса cat не был найден в БД
+     * @throws CatNotFoundException если объект класса Cat не был найден в БД
      */
     public Cat updateCat(Cat cat) {
         if(cat.getId() != null) {
