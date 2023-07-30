@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * Класс-контроллер для объектов класса CatOwner
+ *
  * @see CatOwner
  * @see CatOwnerService
  */
@@ -30,6 +31,73 @@ public class CatOwnerController {
 
     public CatOwnerController(CatOwnerService catOwnerService) {
         this.catOwnerService = catOwnerService;
+    }
+
+    @PostMapping
+    @Operation(
+            summary = "Создать нового владельца кошки",
+            description = "Создание нового владельца кошки с его уникальным идентификатором"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Владелец кошки успешно создан",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = CatOwner.class))
+                            )
+                    }
+            )
+    })
+    public ResponseEntity<CatOwner> createCatOwner(@RequestBody CatOwner catOwner) {
+        CatOwner createCatOwner = catOwnerService.createCatOwner(catOwner);
+        return ResponseEntity.ok(createCatOwner);
+    }
+
+    @GetMapping("/{catOwnerId}")
+    @Operation(
+            summary = "Найти владельца кошки по ее уникальному идентификатору ",
+            description = "Поиск владельца кошки по ее уникальному идентификатору"
+    )
+    @Parameters(value = {
+            @Parameter(name = "Уникальный идентификатор владельца кошки", example = "1")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Владелец кошки успешно найден",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = CatOwner.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Владелец кошки не найден",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = CatOwner.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
+            )
+    })
+    public ResponseEntity<CatOwner> getCatOwnerById(@PathVariable("catOwnerId") Long catOwnerId) {
+        CatOwner getCatOwner = catOwnerService.findCatOwnerById(catOwnerId);
+        if (getCatOwner == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(getCatOwner);
     }
 
     @PutMapping
