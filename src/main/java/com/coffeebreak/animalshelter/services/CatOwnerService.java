@@ -1,5 +1,6 @@
 package com.coffeebreak.animalshelter.services;
 
+import com.coffeebreak.animalshelter.exceptions.CatNotFoundException;
 import com.coffeebreak.animalshelter.models.CatOwner;
 import com.coffeebreak.animalshelter.repositories.CatOwnerRepository;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,30 @@ public class CatOwnerService {
         this.catOwnerRepository = catOwnerRepository;
     }
 
+    /**
+     * Создание объекта класса CatOwner и сохранение его в БД
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#save(Object)}
+     *
+     * @param catOwner объект класса CatOwner, не может быть null
+     * @return созданный объект класса CatOwner
+     */
+    public CatOwner createCatOwner(CatOwner catOwner) {
+        return catOwnerRepository.save(catOwner);
+    }
 
+    /**
+     * Поиск объекта класса CatOwner по его идентификатору
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findById(Object)}
+     *
+     * @param catOwnerId идентификатор искомого объекта класса CatOwner, не может быть null
+     * @return найденный объект класса CatOwner
+     * @throws com.coffeebreak.animalshelter.exceptions.CatOwnerNotFoundException если объект класса Cat не был найден в БД
+     */
+    public CatOwner findCatOwnerById(Long catOwnerId) {
+        return catOwnerRepository.findById(catOwnerId).orElseThrow(CatNotFoundException::new);
+    }
     /**
      * Изменение объекта класса CatOwner и сохранение его в БД
      * <br>
