@@ -92,7 +92,7 @@ public class DogOwnerController {
     })
     public ResponseEntity<DogOwner> getDogOwnerById(@PathVariable("dogOwnerId") Long dogOwnerId) {
         DogOwner foundDogOwner = dogOwnerService.findDogOwnerById(dogOwnerId);
-        if (foundDogOwner == null){
+        if (foundDogOwner == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(foundDogOwner);
