@@ -140,6 +140,7 @@ public class CatController {
         }
         return ResponseEntity.ok(cats);
     }
+
     @PutMapping
     @Operation(
             summary = "Изменить (обновить) данные кошки",
