@@ -18,159 +18,190 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 /**
- * Класс - контроллер для объекта Dog, содержащий набор API endpoints
- * для обращения к маршрутам отдельными HTTP методами
+ * Класс-контроллер для объектов класса Dog
  * @see Dog
  * @see DogService
- * @see DogController
  */
 @RestController
 @RequestMapping("/dog")
 @Tag(name = "Dogs", description = "CRUD-операции для работы с собаками")
 public class DogController {
+
     private final DogService dogService;
 
     public DogController(DogService dogService) {
         this.dogService = dogService;
     }
 
+    @PostMapping
     @Operation(
-            summary = "Создание собаки",
-            description = "Добавление новой собаки из тела запроса"
+            summary = "Создать новую собаку",
+            description = "Создание новой собаки с ее уникальным идентификатором"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Собака создана",
+                    description = "Собака успешно создана",
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Dog.class))
-                            )}),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Собака не создана",
-                    content = {
-                            @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Dog.class))
-                            )})
-    } )
-
-    @PostMapping
-    public ResponseEntity<Dog> createDog (@RequestBody Dog dog) {
-        dogService.createDog(dog);
-        return ResponseEntity.ok(dog);
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = Dog.class))
+                            )
+                    }
+            )
+    })
+    public ResponseEntity<Dog> createDog(@RequestBody Dog dog) {
+        Dog createdDog = dogService.createDog(dog);
+        return ResponseEntity.ok(createdDog);
     }
 
-
-    @Operation(summary = "Найти собаку по id",
-            responses = {
+    @GetMapping("/{dogId}")
+    @Operation(
+            summary = "Найти собаку по ее уникальному идентификатору ",
+            description = "Поиск собаки по ее уникальному идентификатору"
+    )
+    @Parameters(value = {
+            @Parameter(name = "Уникальный идентификатор собаки", example = "1")
+    })
+    @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Собака найдена по id",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Dog.class)
-                    ) ) } )
-       @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Собака была найдена",
+                    description = "Собака успешно найдена",
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Dog.class))
-                            )}),
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = Dog.class))
+                            )
+                    }
+            ),
             @ApiResponse(
                     responseCode = "404",
                     description = "Собака не найдена",
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Dog.class))
-                            )})
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<Dog> getDogById(@PathVariable Long id) {
-        Dog dog = dogService.getDogById(id);
-        if (dog == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(dog);
-    }
-
-
-    @Operation(summary = "Удаление собаки по id",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Собака, найденная по id для удаления",
-                            content = @Content(
-                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Dog.class)
-                            ) ) }  )
-    @Parameters(value = {
-            @Parameter(name = "id", example = "1")
-    } )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Собака удалена"
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = Dog.class))
+                            )
+                    }
             ),
             @ApiResponse(
-                    responseCode = "404",
-                    description = "Собака не удалена"
-            )})
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remove(@PathVariable Long id) {
-        if (dogService.remove(id)) {
-            return ResponseEntity.ok().build();
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
+            )
+    })
+    public ResponseEntity<Dog> getDogById(@PathVariable("dogId") Long dogId) {
+        Dog foundDog = dogService.findDogById(dogId);
+        if (foundDog == null) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(foundDog);
     }
 
-
+    @GetMapping
     @Operation(
-            summary = "Изменение данных собаки",
-            description = "Обновление данных собаки из тела запроса"
+            summary = "Найти список всех собак",
+            description = "Показать список всех собак"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Данные собаки обновлены",
+                    description = "Список собак успешно найден",
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Dog.class))
-                            ) } ),
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = Dog.class))
+                            )
+                    }
+            ),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "Данные собаки не обновлены",
+                    responseCode = "404",
+                    description = "Список собак не найден",
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    array = @ArraySchema(schema = @Schema(implementation = Dog.class))
-                            ) } )
-    } )
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = Dog.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
+            )
+    })
+    public ResponseEntity<Collection<Dog>> getAllDogs() {
+        Collection<Dog> dogs = dogService.findAllDogs();
+        if (dogs == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dogs);
+    }
+
     @PutMapping
-    public ResponseEntity<Dog> editDog(@RequestBody Dog dog) {
-        dogService.editDog(dog);
-        return ResponseEntity.ok(dog);
-    }
-
-    @Operation(summary = "Просмотр всех собак",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Собаки найдены",
-                            content = @Content(
+    @Operation(
+            summary = "Изменить (обновить) данные собаки",
+            description = "Изменение (обновление) данных собаки"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Данные собаки успешно изменены (обновлены)",
+                    content = {
+                            @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Dog.class)
-                            ) )  }  )
-    @GetMapping("/allDog")
-    public Collection<Dog> getAll() {
-        return this.dogService.getAllDog();
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = Dog.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Собака не найдена",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = Dog.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
+            )
+    })
+    public ResponseEntity<Dog> updateDog(@RequestBody Dog dog) {
+        Dog updatedDog = dogService.updateDog(dog);
+        if (updatedDog == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedDog);
     }
 
+    @DeleteMapping("/{dogId}")
+    @Operation(
+            summary = "Удаление собаки по ее уникальному идентификатору",
+            description = "Поиск собаки для удаления по ее уникальному идентификатору"
+    )
+    @Parameters(value = {
+            @Parameter(name = "Уникальный идентификатор собаки", example = "1")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Собака успешно удалена"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Собака не найдена"
+            )
+    })
+    public ResponseEntity<Void> deleteDogById(@PathVariable("dogId") Long dogId) {
+        dogService.deleteDogById(dogId);
+        return ResponseEntity.ok().build();
+    }
 }
