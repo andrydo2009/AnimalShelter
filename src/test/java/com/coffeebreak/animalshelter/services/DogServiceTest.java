@@ -46,7 +46,7 @@ public class DogServiceTest {
         expected.setAge(2022);
         expected.setDescription("Test");
 
-        expected.setId(1L);
+        expected.setId(2L);
         expected.setNickName("Rich");
         expected.setDogBreed("doberman");
         expected.setAge(2021);
