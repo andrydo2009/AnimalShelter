@@ -35,9 +35,9 @@ public class AnimalReportDataService {
      * Поиск объекта класса AnimalReportData по его идентификатору
      * <br>
      * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findById(Object)}
-     * @param animalReportDataId идентификатор искомого объекта класса CatOwner, не может быть null
+     * @param animalReportDataId идентификатор искомого объекта класса AnimalReportData, не может быть null
      * @return найденный объект класса AnimalReportData
-     * @throws AnimalReportDataNotFoundException если объект класса CatOwner не был найден в БД
+     * @throws AnimalReportDataNotFoundException если объект класса AnimalReportData не был найден в БД
      */
     public AnimalReportData findAnimalReportDataById(Long animalReportDataId) {
         return animalReportDataRepository.findById(animalReportDataId).orElseThrow(AnimalReportDataNotFoundException::new);
