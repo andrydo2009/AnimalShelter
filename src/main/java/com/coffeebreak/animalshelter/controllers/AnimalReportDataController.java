@@ -2,15 +2,29 @@ package com.coffeebreak.animalshelter.controllers;
 
 import com.coffeebreak.animalshelter.models.AnimalReportData;
 import com.coffeebreak.animalshelter.services.AnimalReportDataService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+/**
+ * Класс-контроллер для объектов класса AnimalReportData
+ * @see AnimalReportData
+ * @see AnimalReportDataService
+ */
 @RestController
 @RequestMapping("/report")
-@Tag(name = "AnimalReportData", description = "CRUD-операции для работы с отчетами.")
+@Tag(name = "AnimalReportData", description = "CRUD-операции для работы с отчетами")
 public class AnimalReportDataController {
     private  final AnimalReportDataService animalReportDataService;
 
@@ -19,23 +33,104 @@ public class AnimalReportDataController {
     }
 
     @PostMapping
-    public ResponseEntity<AnimalReportData> createAnimalReport(@RequestBody AnimalReportData animalReportData) {
-        AnimalReportData createdAnimalReportData = animalReportDataService.createAnimalReportData ( animalReportData );
+    @Operation(
+            summary = "Создать новый отчет о животном",
+            description = "Создание нового отчета о животном с его уникальным идентификатором"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отчет успешно создан",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = AnimalReportData.class))
+                            )
+                    }
+            )
+    })
+    public ResponseEntity<AnimalReportData> createAnimalReportData(@RequestBody AnimalReportData animalReportData) {
+        AnimalReportData createdAnimalReportData = animalReportDataService.createAnimalReportData(animalReportData);
         return ResponseEntity.ok(createdAnimalReportData);
     }
 
     @GetMapping
-    public ResponseEntity<Collection<AnimalReportData>> getAllDAnimalReportData() {
-        Collection<AnimalReportData> animalReportDataAll = animalReportDataService.findAllAnimalReport (  );
-        if (animalReportDataAll.isEmpty()) {
+    @Operation(
+            summary = "Найти список всех отчетов о животных",
+            description = "Показать список всех отчетов о животных"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Список отчетов о животных успешно найден",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = AnimalReportData.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Отчет не найден",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = AnimalReportData.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
+            )
+    })
+    public ResponseEntity<Collection<AnimalReportData>> getAllAnimalReportData() {
+        Collection<AnimalReportData> allAnimalReportData = animalReportDataService.findAllAnimalReportData();
+        if (allAnimalReportData.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(animalReportDataAll);
+        return ResponseEntity.ok(allAnimalReportData);
     }
 
     @PutMapping
+    @Operation(
+            summary = "Изменить (обновить) данные отчета о животном",
+            description = "Изменение (обновление) данных отчета о животном"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Данные отчета о животном успешно изменены (обновлены)",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = AnimalReportData.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Отчет не найден",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = AnimalReportData.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
+            )
+    })
     public ResponseEntity<AnimalReportData> updateAnimalReportData(@RequestBody AnimalReportData animalReportData) {
-        AnimalReportData updatedAnimalReportData = animalReportDataService.updateAnimalReportData ( animalReportData );
+        AnimalReportData updatedAnimalReportData = animalReportDataService.updateAnimalReportData(animalReportData);
         if (updatedAnimalReportData == null) {
             return ResponseEntity.notFound().build ();
         }
@@ -43,9 +138,25 @@ public class AnimalReportDataController {
     }
 
     @DeleteMapping("/{animalReportDataId}")
-    public ResponseEntity<Void> deleteAnimalReportDataById(@PathVariable("animalReportDataId") Long animalReportData) {
-        animalReportDataService.deleteAnimalReportData (animalReportData);
+    @Operation(
+            summary = "Удаление отчета о животном по его уникальному идентификатору",
+            description = "Поиск отчета о животном для его удаления по его уникальному идентификатору"
+    )
+    @Parameters(value = {
+            @Parameter(name = "Уникальный идентификатор отчета о животном", example = "1")
+    })
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Отчет о животном успешно удален"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Отчет о животном не найден"
+            )
+    })
+    public ResponseEntity<Void> deleteAnimalReportDataById(@PathVariable("animalReportDataId") Long animalReportDataId) {
+        animalReportDataService.deleteAnimalReportDataById(animalReportDataId);
         return ResponseEntity.ok().build();
     }
-
 }
