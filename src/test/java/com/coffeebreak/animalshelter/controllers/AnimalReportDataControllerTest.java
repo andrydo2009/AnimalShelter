@@ -83,7 +83,7 @@ class AnimalReportDataControllerTest {
     }
 
     @Test
-    void createAnimalReport() throws Exception {
+    void createAnimalReportTest() throws Exception {
         when(reportDataService.createAnimalReportData(reportTestOne)).thenReturn(reportTestOne);
 
         mvc.perform(MockMvcRequestBuilders.post("/report")
@@ -107,7 +107,7 @@ class AnimalReportDataControllerTest {
     }
 
     @Test
-    void getAllDAnimalReportData() throws Exception {
+    void getAllDAnimalReportDataTest() throws Exception {
         when(reportDataService.findAllAnimalReport()).thenReturn(reportListTest);
         mvc.perform(MockMvcRequestBuilders.get("/report/all_report")
                 .content(objectMapper.writeValueAsString(reportListTest))
@@ -117,7 +117,7 @@ class AnimalReportDataControllerTest {
     }
 
     @Test
-    void updateAnimalReportData() throws Exception {
+    void updateAnimalReportDataTest() throws Exception {
         when(reportDataService.updateAnimalReportData(reportTestOne)).thenReturn(reportTestOne);
 
         mvc.perform(MockMvcRequestBuilders.put("/report")
@@ -141,7 +141,7 @@ class AnimalReportDataControllerTest {
     }
 
     @Test
-    void deleteAnimalReportDataById()throws Exception  {
+    void deleteAnimalReportDataByIdTest()throws Exception  {
             doNothing().when(reportDataService).deleteAnimalReportData(reportTestOne.getId());
             mvc.perform(MockMvcRequestBuilders.delete("/report/{animalReportDataId}",reportTestOne.getId()))
                     .andExpect(status().isOk());

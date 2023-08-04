@@ -66,6 +66,12 @@ class AnimalReportDataServiceTest {
         animalReportDataRepository.deleteAll();
     }
 
+    /**
+     * Тестирование метода <b>createAnimalReport()</b> в AnimalReportDataService
+     * <br>
+     * Mockito: когда вызывается метод <b>AnimalReportDataRepository::save</b>,
+     * возвращается объект класса AnimalReportData <b>reportTestOne</b>
+     */
     @Test
     void createAnimalReportDataTest(){
         // Устанавливаем поведение mock-репозитория при вызове findById
@@ -76,7 +82,12 @@ class AnimalReportDataServiceTest {
         Assertions.assertNotEquals(result,reportTestTwo);
     }
 
-
+    /**
+     * Тестирование метода <b>findById()</b> в AnimalReportDataService
+     * <br>
+     * Mockito: когда вызывается метод <b>AnimalReportDataRepository::findById</b>,
+     * возвращается объект класса AnimalReportData <b>reportTestOne</b>
+     */
     @Test
     void findByIdTest() {
         // Устанавливаем поведение mock-репозитория при вызове findById
@@ -103,6 +114,12 @@ class AnimalReportDataServiceTest {
         Assertions.assertNotEquals(result,reportTestTwo);
     }
 
+    /**
+     * Тестирование метода <b>findAll()</b> в AnimalReportDataService
+     * <br>
+     * Mockito: когда вызывается метод <b>AnimalReportDataRepository::findAll</b>,
+     * возвращается объект типа Collection<AnimalReportData>
+     */
     @Test
     void findAllAnimalReportTest(){
         // Устанавливаем поведение mock-репозитория при вызове findAll
@@ -114,6 +131,12 @@ class AnimalReportDataServiceTest {
         Assertions.assertArrayEquals(result.toArray(), reportListTest.toArray());
     }
 
+    /**
+     * Тестирование метода <b>updateAnimalReportData</b> в AnimalReportDataService
+     * <br>
+     * Mockito: когда вызывается метод <b>AnimalReportDataRepository::findById</b>,
+     * возвращается объект класса AnimalReportData <b>reportTestOne</b>
+     */
     @Test
     void updateAnimalReportDataTest(){
         // Устанавливаем поведение mock-репозитория при вызове findById
@@ -133,8 +156,12 @@ class AnimalReportDataServiceTest {
         // и наоборот
         Assertions.assertNotEquals(reportTestOne,result);
     }
+
+    /**
+     * Тестирование метода <b>deleteAnimalReportData</b> в AnimalReportDataService
+     */
     @Test
-    public void testDeleteAnimalReportData() {
+    public void deleteAnimalReportDataTest() {
         // Устанавливаем поведение mock-репозитория при вызове findById
         when(animalReportDataRepository.save ( reportTestOne )).thenReturn(reportTestOne);
         AnimalReportData result = animalReportDataService.createAnimalReportData(reportTestOne);
