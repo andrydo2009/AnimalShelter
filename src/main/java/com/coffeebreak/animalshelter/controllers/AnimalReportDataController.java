@@ -2,7 +2,9 @@ package com.coffeebreak.animalshelter.controllers;
 
 import com.coffeebreak.animalshelter.listener.TelegramBotUpdatesListener;
 import com.coffeebreak.animalshelter.models.AnimalReportData;
+import com.coffeebreak.animalshelter.models.Cat;
 import com.coffeebreak.animalshelter.services.AnimalReportDataService;
+import com.coffeebreak.animalshelter.services.CatService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+/**
+ * Класс-контроллер для объектов класса AnimalReportData
+ * @see AnimalReportData
+ * @see AnimalReportDataService
+ */
 @RestController
 @RequestMapping("/report")
 @Tag(name = "AnimalReportData", description = "CRUD-операции для работы с отчетами.")
