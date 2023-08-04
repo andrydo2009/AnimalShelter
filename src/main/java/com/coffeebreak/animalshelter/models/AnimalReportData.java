@@ -176,7 +176,7 @@ public class AnimalReportData {
         if (this == o) return true;
         if (o == null || getClass () != o.getClass ()) return false;
         AnimalReportData that = (AnimalReportData) o;
-        return fileSize == that.fileSize && Objects.equals ( id , that.id ) && Objects.equals ( chatId , that.chatId ) && Objects.equals ( rationOfAnimal , that.rationOfAnimal ) && Objects.equals ( healthOfAnimal , that.healthOfAnimal ) && Objects.equals ( habitsOfAnimal , that.habitsOfAnimal ) && Objects.equals ( daysOfOwnership , that.daysOfOwnership ) && Objects.equals ( filePath , that.filePath );
+        return fileSize.equals(that.fileSize) && Objects.equals ( id , that.id ) && Objects.equals ( chatId , that.chatId ) && Objects.equals ( rationOfAnimal , that.rationOfAnimal ) && Objects.equals ( healthOfAnimal , that.healthOfAnimal ) && Objects.equals ( habitsOfAnimal , that.habitsOfAnimal ) && Objects.equals ( daysOfOwnership , that.daysOfOwnership ) && Objects.equals ( filePath , that.filePath );
     }
 
     @Override

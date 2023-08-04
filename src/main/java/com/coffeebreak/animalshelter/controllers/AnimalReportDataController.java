@@ -34,7 +34,7 @@ public class AnimalReportDataController {
         return ResponseEntity.ok(createdAnimalReportData);
     }
 
-    @GetMapping
+    @GetMapping("/all_report")
     public ResponseEntity<Collection<AnimalReportData>> getAllDAnimalReportData() {
         Collection<AnimalReportData> animalReportDataAll = animalReportDataService.findAllAnimalReport (  );
         if (animalReportDataAll.isEmpty()) {
