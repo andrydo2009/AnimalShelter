@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
 
@@ -29,13 +30,24 @@ public class AnimalReportData {
     public AnimalReportData() {
     }
 
-    public AnimalReportData(String rationOfAnimal, String healthOfAnimal, String habitsOfAnimal) {
+    public AnimalReportData(Long id, Long chatId, String rationOfAnimal, String healthOfAnimal, String habitsOfAnimal, Long daysOfOwnership, String filePath, Long fileSize) {
+        this.id = id;
+        this.chatId = chatId;
+        this.rationOfAnimal = rationOfAnimal;
+        this.healthOfAnimal = healthOfAnimal;
+        this.habitsOfAnimal = habitsOfAnimal;
+        this.daysOfOwnership = daysOfOwnership;
+        this.filePath = filePath;
+        this.fileSize = fileSize;
+    }
+
+    public AnimalReportData(String rationOfAnimal , String healthOfAnimal , String habitsOfAnimal) {
         this.rationOfAnimal = rationOfAnimal;
         this.healthOfAnimal = healthOfAnimal;
         this.habitsOfAnimal = habitsOfAnimal;
     }
 
-    public AnimalReportData(Long chatId, String rationOfAnimal, String healthOfAnimal, String habitsOfAnimal, byte[] data) {
+    public AnimalReportData(Long chatId , String rationOfAnimal , String healthOfAnimal , String habitsOfAnimal , byte[] data) {
         this.chatId = chatId;
         this.rationOfAnimal = rationOfAnimal;
         this.healthOfAnimal = healthOfAnimal;
@@ -43,9 +55,24 @@ public class AnimalReportData {
         this.data = data;
     }
 
-    public AnimalReportData(Long chatId, byte[] data) {
+    public AnimalReportData(Long chatId , byte[] data) {
         this.chatId = chatId;
         this.data = data;
+    }
+
+    public AnimalReportData(Long id, Long chatId, String rationOfAnimal, String healthOfAnimal, String habitsOfAnimal, Long daysOfOwnership, String filePath, Long fileSize, byte[] data, String caption, Date lastMessage, Long lastMessageMs) {
+        this.id = id;
+        this.chatId = chatId;
+        this.rationOfAnimal = rationOfAnimal;
+        this.healthOfAnimal = healthOfAnimal;
+        this.habitsOfAnimal = habitsOfAnimal;
+        this.daysOfOwnership = daysOfOwnership;
+        this.filePath = filePath;
+        this.fileSize = fileSize;
+        this.data = data;
+        this.caption = caption;
+        this.lastMessage = lastMessage;
+        this.lastMessageMs = lastMessageMs;
     }
 
     public Long getId() {
@@ -147,13 +174,31 @@ public class AnimalReportData {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass () != o.getClass ()) return false;
         AnimalReportData that = (AnimalReportData) o;
-        return Objects.equals(id, that.id) && Objects.equals(chatId, that.chatId) && Objects.equals(rationOfAnimal, that.rationOfAnimal) && Objects.equals(healthOfAnimal, that.healthOfAnimal) && Objects.equals(habitsOfAnimal, that.habitsOfAnimal) && Objects.equals(daysOfOwnership, that.daysOfOwnership) && Objects.equals(filePath, that.filePath) && Objects.equals(fileSize, that.fileSize);
+        return fileSize.equals(that.fileSize) && Objects.equals ( id , that.id ) && Objects.equals ( chatId , that.chatId ) && Objects.equals ( rationOfAnimal , that.rationOfAnimal ) && Objects.equals ( healthOfAnimal , that.healthOfAnimal ) && Objects.equals ( habitsOfAnimal , that.habitsOfAnimal ) && Objects.equals ( daysOfOwnership , that.daysOfOwnership ) && Objects.equals ( filePath , that.filePath );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, chatId, rationOfAnimal, healthOfAnimal, habitsOfAnimal, daysOfOwnership, filePath, fileSize);
+        return Objects.hash ( id , chatId , rationOfAnimal , healthOfAnimal , habitsOfAnimal , daysOfOwnership , filePath , fileSize );
+    }
+
+    @Override
+    public String toString() {
+        return "AnimalReportData{" +
+                "id=" + id +
+                ", chatId=" + chatId +
+                ", rationOfAnimal='" + rationOfAnimal + '\'' +
+                ", healthOfAnimal='" + healthOfAnimal + '\'' +
+                ", habitsOfAnimal='" + habitsOfAnimal + '\'' +
+                ", daysOfOwnership=" + daysOfOwnership +
+                ", filePath='" + filePath + '\'' +
+                ", fileSize=" + fileSize +
+                ", data=" + Arrays.toString(data) +
+                ", caption='" + caption + '\'' +
+                ", lastMessage=" + lastMessage +
+                ", lastMessageMs=" + lastMessageMs +
+                '}';
     }
 }
