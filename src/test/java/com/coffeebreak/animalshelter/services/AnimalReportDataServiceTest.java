@@ -76,6 +76,7 @@ class AnimalReportDataServiceTest {
         Assertions.assertNotEquals(result,reportTestTwo);
     }
 
+
     @Test
     void findByIdTest() {
         // Устанавливаем поведение mock-репозитория при вызове findById
