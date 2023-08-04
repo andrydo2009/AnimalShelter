@@ -20,6 +20,11 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 
+/**
+ * Класс для проверки CRUD-операций класса CatOwnerService
+ * @see CatOwnerService
+ * @see CatOwnerRepository
+ */
 @ExtendWith(MockitoExtension.class)
 public class CatOwnerServiceTest {
 
@@ -29,6 +34,11 @@ public class CatOwnerServiceTest {
     @InjectMocks
     private CatOwnerService catOwnerService;
 
+    /**
+     * Проверка метода <b>createCatOwner()</b> класса CatOwnerService
+     * <br>
+     * Когда вызывается метод <b>CatOwnerRepository::save()</b>, возвращается ожидаемый объект класса CatOwner
+     */
     @Test
     @DisplayName("Проверка создания владельца кошки и добавления его в БД")
     void createCatOwnerTest() {
@@ -45,6 +55,11 @@ public class CatOwnerServiceTest {
         Assertions.assertThat(actual.getPhoneNumber()).isEqualTo(expected.getPhoneNumber());
     }
 
+    /**
+     * Проверка метода <b>findCatOwnerById()</b> класса CatOwnerService
+     * <br>
+     * Когда вызывается метод <b>CatOwnerRepository::findById()</b>, возвращается ожидаемый объект класса CatOwner
+     */
     @Test
     @DisplayName("Проверка поиска хозяина кошки по id")
     void findCatOwnerByIdTest() {
@@ -61,6 +76,11 @@ public class CatOwnerServiceTest {
         Assertions.assertThat(actual.getPhoneNumber()).isEqualTo(expected.getPhoneNumber());
     }
 
+    /**
+     * Проверка выбрасывания исключения в методе <b>findCatOwnerById()</b> класса CatOwnerService
+     * <br>
+     * Когда вызывается метод <b>CatOwnerRepository::findById()</b>, выбрасывается исключение <b>CatOwnerNotFoundException</b>
+     */
     @Test
     @DisplayName("Проверка выбрасывания исключения при поиске хозяина кошки по id")
     void findCatOwnerByIdExceptionTest() {
@@ -69,6 +89,11 @@ public class CatOwnerServiceTest {
         org.junit.jupiter.api.Assertions.assertThrows(CatNotFoundException.class, () -> catOwnerService.findCatOwnerById(1L));
     }
 
+    /**
+     * Проверка метода <b>findAllCatOwners()</b> класса CatOwnerService
+     * <br>
+     * Когда вызывается метод <b>CatOwnerRepository::findAll()</b>, возвращается коллекция ожидаемых объектов класса CatOwner
+     */
     @Test
     @DisplayName("Проверка поиска списка всех хозяев кошек")
     void findAllCatOwnersTest() {
@@ -89,6 +114,11 @@ public class CatOwnerServiceTest {
         Assertions.assertThat(actual).isEqualTo(expected);
     }
 
+    /**
+     * Проверка метода <b>updateCatOwner()</b> класса CatOwnerService
+     * <br>
+     * Когда вызывается метод <b>CatOwnerRepository::save()</b>, возвращается ожидаемый объект класса CatOwner
+     */
     @Test
     @DisplayName("Проверка изменения (обновления) данных владельца кошки и добавления его в БД")
     void updateCatOwnerTest() {
@@ -106,6 +136,11 @@ public class CatOwnerServiceTest {
         Assertions.assertThat(actual.getPhoneNumber()).isEqualTo(expected.getPhoneNumber());
     }
 
+    /**
+     * Проверка выбрасывания исключения в методе <b>updateCatOwner()</b> класса CatOwnerService
+     * <br>
+     * Создание объекта <b>CatOwner</b> с id равным null
+     */
     @Test
     @DisplayName("Проверка выбрасывания исключения при изменении (обновлении) данных владельца кошки и добавления его в БД")
     void updateCatOwnerExceptionTest() {
