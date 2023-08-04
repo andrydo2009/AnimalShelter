@@ -1,6 +1,5 @@
 package com.coffeebreak.animalshelter.controllers;
 
-import com.coffeebreak.animalshelter.exceptions.AnimalReportDataNotFoundException;
 import com.coffeebreak.animalshelter.listener.TelegramBotUpdatesListener;
 import com.coffeebreak.animalshelter.models.AnimalReportData;
 import com.coffeebreak.animalshelter.services.AnimalReportDataService;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
