@@ -24,7 +24,7 @@ import java.util.Collection;
  */
 @RestController
 @RequestMapping("/dog_owner")
-@Tag(name = "DogOwners", description = "CRUD-операции для работы с владельцами собак.")
+@Tag(name = "Dog owners", description = "CRUD-операции для работы с владельцами собак.")
 public class DogOwnerController {
     private final DogOwnerService dogOwnerService;
 

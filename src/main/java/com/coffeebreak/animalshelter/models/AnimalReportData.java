@@ -3,6 +3,8 @@ package com.coffeebreak.animalshelter.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -17,9 +19,33 @@ public class AnimalReportData {
     private String habitsOfAnimal; //привычки животного
     private Long daysOfOwnership; //время владения
     private String filePath; // путь к файлу
-    private long fileSize; //размер файла
+    private Long fileSize; //размер файла
+    @Lob
+    private byte[] data;
+    private String caption;
+    private Date lastMessage;
+    private Long lastMessageMs;
 
     public AnimalReportData() {
+    }
+
+    public AnimalReportData(String rationOfAnimal, String healthOfAnimal, String habitsOfAnimal) {
+        this.rationOfAnimal = rationOfAnimal;
+        this.healthOfAnimal = healthOfAnimal;
+        this.habitsOfAnimal = habitsOfAnimal;
+    }
+
+    public AnimalReportData(Long chatId, String rationOfAnimal, String healthOfAnimal, String habitsOfAnimal, byte[] data) {
+        this.chatId = chatId;
+        this.rationOfAnimal = rationOfAnimal;
+        this.healthOfAnimal = healthOfAnimal;
+        this.habitsOfAnimal = habitsOfAnimal;
+        this.data = data;
+    }
+
+    public AnimalReportData(Long chatId, byte[] data) {
+        this.chatId = chatId;
+        this.data = data;
     }
 
     public Long getId() {
@@ -78,24 +104,56 @@ public class AnimalReportData {
         this.filePath = filePath;
     }
 
-    public long getFileSize() {
+    public Long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(long fileSize) {
+    public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    public Date getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(Date lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public Long getLastMessageMs() {
+        return lastMessageMs;
+    }
+
+    public void setLastMessageMs(Long lastMessageMs) {
+        this.lastMessageMs = lastMessageMs;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass () != o.getClass ()) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         AnimalReportData that = (AnimalReportData) o;
-        return fileSize == that.fileSize && Objects.equals ( id , that.id ) && Objects.equals ( chatId , that.chatId ) && Objects.equals ( rationOfAnimal , that.rationOfAnimal ) && Objects.equals ( healthOfAnimal , that.healthOfAnimal ) && Objects.equals ( habitsOfAnimal , that.habitsOfAnimal ) && Objects.equals ( daysOfOwnership , that.daysOfOwnership ) && Objects.equals ( filePath , that.filePath );
+        return Objects.equals(id, that.id) && Objects.equals(chatId, that.chatId) && Objects.equals(rationOfAnimal, that.rationOfAnimal) && Objects.equals(healthOfAnimal, that.healthOfAnimal) && Objects.equals(habitsOfAnimal, that.habitsOfAnimal) && Objects.equals(daysOfOwnership, that.daysOfOwnership) && Objects.equals(filePath, that.filePath) && Objects.equals(fileSize, that.fileSize);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash ( id , chatId , rationOfAnimal , healthOfAnimal , habitsOfAnimal , daysOfOwnership , filePath , fileSize );
+        return Objects.hash(id, chatId, rationOfAnimal, healthOfAnimal, habitsOfAnimal, daysOfOwnership, filePath, fileSize);
     }
 }
