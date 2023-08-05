@@ -53,6 +53,8 @@ public class CatOwnerServiceTest {
         Assertions.assertThat(actual.getAge()).isEqualTo(expected.getAge());
         Assertions.assertThat(actual.getAddress()).isEqualTo(expected.getAddress());
         Assertions.assertThat(actual.getPhoneNumber()).isEqualTo(expected.getPhoneNumber());
+
+        Mockito.verify(catOwnerRepositoryMock, Mockito.times(1)).save(expected);
     }
 
     /**
@@ -74,6 +76,12 @@ public class CatOwnerServiceTest {
         Assertions.assertThat(actual.getAge()).isEqualTo(expected.getAge());
         Assertions.assertThat(actual.getAddress()).isEqualTo(expected.getAddress());
         Assertions.assertThat(actual.getPhoneNumber()).isEqualTo(expected.getPhoneNumber());
+
+        // проверяем, что метод findById() был вызван один раз с нужным аргументом
+        Mockito.verify(catOwnerRepositoryMock, Mockito.times(1)).findById(1L);
+
+        // проверяем, что метод findById() был вызван только один раз
+        Mockito.verify(catOwnerRepositoryMock, Mockito.times(1)).findById(Mockito.anyLong());
     }
 
     /**
@@ -99,12 +107,12 @@ public class CatOwnerServiceTest {
     void findAllCatOwnersTest() {
         List<CatOwner> expected = new ArrayList<>();
 
-        CatOwner catOwnerTest1 = new CatOwner(1L, "testFullName1", 30, "testAddress1", "testPhoneNumber1");
-        expected.add(catOwnerTest1);
-        CatOwner catOwnerTest2 = new CatOwner(2L, "testFullName2", 30, "testAddress2", "testPhoneNumber2");
-        expected.add(catOwnerTest2);
-        CatOwner catOwnerTest3 = new CatOwner(3L, "testFullName3", 30, "testAddress3", "testPhoneNumber3");
-        expected.add(catOwnerTest3);
+        CatOwner catOwnerTestOne = new CatOwner(1L, "testFullName1", 30, "testAddress1", "testPhoneNumber1");
+        expected.add(catOwnerTestOne);
+        CatOwner catOwnerTestTwo = new CatOwner(2L, "testFullName2", 30, "testAddress2", "testPhoneNumber2");
+        expected.add(catOwnerTestTwo);
+        CatOwner catOwnerTestThree = new CatOwner(3L, "testFullName3", 30, "testAddress3", "testPhoneNumber3");
+        expected.add(catOwnerTestThree);
 
         Mockito.when(catOwnerRepositoryMock.findAll()).thenReturn(expected);
 
@@ -134,6 +142,18 @@ public class CatOwnerServiceTest {
         Assertions.assertThat(actual.getAge()).isEqualTo(expected.getAge());
         Assertions.assertThat(actual.getAddress()).isEqualTo(expected.getAddress());
         Assertions.assertThat(actual.getPhoneNumber()).isEqualTo(expected.getPhoneNumber());
+
+        // проверяем, что метод findById() был вызван один раз с нужным аргументом
+        Mockito.verify(catOwnerRepositoryMock, Mockito.times(1)).findById(1L);
+
+        // проверяем, что метод save() был вызван один раз с нужным аргументом
+        Mockito.verify(catOwnerRepositoryMock, Mockito.times(1)).save(expected);
+
+        // проверяем, что метод findById() был вызван только один раз
+        Mockito.verify(catOwnerRepositoryMock, Mockito.times(1)).findById(Mockito.anyLong());
+
+        // проверяем, что метод save() был вызван только один раз
+        Mockito.verify(catOwnerRepositoryMock, Mockito.times(1)).save(Mockito.any(CatOwner.class));
     }
 
     /**
