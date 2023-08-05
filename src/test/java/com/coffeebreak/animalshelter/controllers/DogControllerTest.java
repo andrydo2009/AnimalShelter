@@ -108,7 +108,7 @@ public class DogControllerTest {
      */
     @Test
     @DisplayName("Проверка статуса 200 при получении собаки по id")
-    public void getDogByIdTest200() throws Exception {
+    public void getDogByIdTest() throws Exception {
         when(dogService.findDogById(anyLong())).thenReturn(expected);
         mockMvc.perform(get("/dog/{dogId}", expected.getId()))
                 .andExpect(status().isOk())
@@ -126,7 +126,7 @@ public class DogControllerTest {
      */
     @Test
     @DisplayName("Проверка статуса 404 при поиске собаки по id, которой нет в базе данных")
-    public void getDogByIdTest404() throws Exception {
+    public void getDogByIdTestNotFound() throws Exception {
         when(dogService.findDogById(anyLong())).thenThrow(DogNotFoundException.class);
         mockMvc.perform(get("/dog/{dogId}", expected1.getId()))
                 .andExpect(status().isOk());
@@ -140,7 +140,7 @@ public class DogControllerTest {
      */
     @Test
     @DisplayName("Проверка статуса 200 при получении всех собак в базе данных")
-    void getAllDogsTest200() throws Exception {
+    void getAllDogsTest() throws Exception {
         when(dogService.findAllDogs()).thenReturn(Arrays.asList(expected, expected1));
         mockMvc.perform(get("/dog/"))
                 .andExpect(status().isOk())
@@ -156,7 +156,7 @@ public class DogControllerTest {
      */
     @Test
     @DisplayName("Проверка статуса 200 при попытке обновить и сохранить собаку в базе данных")
-    public void updateDogTest200() throws Exception {
+    public void updateDogTest() throws Exception {
         when(dogService.updateDog(expected)).thenReturn(expected);
         mockMvc.perform(put("/dog", dogId)
                 .content(objectMapper.writeValueAsString(expected))
@@ -214,7 +214,7 @@ public class DogControllerTest {
      */
     @Test
     @DisplayName("Проверка статуса 404 при попытке удалить по id собаку, которой нет в базе данных ")
-    public void deleteDogByIdTest404() throws Exception {
+    public void deleteDogByIdTestNotFound() throws Exception {
         Long id=10L;
         when(dogService.findDogById(anyLong())).thenThrow(DogNotFoundException.class);
         mockMvc.perform(delete("/dog/{dogId}", id))
