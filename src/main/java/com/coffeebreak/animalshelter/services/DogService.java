@@ -60,7 +60,7 @@ public class DogService {
      * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#save(Object)}
      * @param dog объект класса Dog, не может быть null
      * @return изменённый объект класса Dog
-     * @throws DogNotFoundException если объект класса dog не был найден в БД
+     * @throws DogNotFoundException если объект класса Dog не был найден в БД
      */
     public Dog updateDog(Dog dog) {
         if (dog.getId() != null) {
