@@ -2,15 +2,20 @@ package com.coffeebreak.animalshelter.controllers;
 
 import com.coffeebreak.animalshelter.models.Cat;
 import com.coffeebreak.animalshelter.services.CatService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -23,77 +28,72 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CatController.class)
 public class CatControllerTest {
     @Autowired
-    private MockMvc mockMvc;
+    private MockMvc mvc;
 
     @MockBean
     private CatService catService;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    Cat cat = new Cat(1L,"Cat", 3, "Persian", "description");
+
+    List<Cat> catList= new ArrayList<>(List.of(cat));
+
     @Test
-    void getById() throws Exception {
-        Cat cat = new Cat();
-        cat.setId(1L);
-
+    void getCatByIdTest() throws Exception {
         when(catService.findCatById(anyLong())).thenReturn(cat);
-
-        mockMvc.perform(
-                        get("/cat/{id}", 1L))
+        mvc.perform(
+                        get("/cat/{id}", cat.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
 
         verify(catService).findCatById(1L);
     }
+    
     @Test
-    void save() throws Exception {
-        Cat cat = new Cat();
-        cat.setId(1L);
-        cat.setNickName("cat");
-        JSONObject userObject = new JSONObject();
-        userObject.put("id", 1L);
-        userObject.put("name", "cat");
-
+    void saveCatTest() throws Exception {
         when(catService.createCat(cat)).thenReturn(cat);
-
-        mockMvc.perform(
-                        post("/cat")
-                                .content(userObject.toString())
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(userObject.toString()));
-
-        verify(catService).createCat(cat);
+        mvc.perform(MockMvcRequestBuilders.post("/cat")
+                        .content(objectMapper.writeValueAsString(cat))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(3))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.catBreed").value("Persian"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("description"))
+                .andExpect(status().isOk());
+        Mockito.verify(catService, Mockito.times(1)).createCat(cat);
     }
+    
     @Test
-    void update() throws Exception {
-        Cat cat = new Cat();
-        cat.setId(1L);
-        cat.setNickName("cat new");
-        JSONObject userObject = new JSONObject();
-        userObject.put("id", 1L);
-        userObject.put("name", "cat new");
-
+    void updateCatTest() throws Exception {
         when(catService.updateCat(cat)).thenReturn(cat);
-
-        mockMvc.perform(
-                        put("/cat")
-                                .content(userObject.toString())
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(userObject.toString()));
-
-        verify(catService).updateCat(cat);
+        mvc.perform(MockMvcRequestBuilders.put("/cat")
+                        .content(objectMapper.writeValueAsString(cat))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(3))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.catBreed").value("Persian"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("description"))
+                .andExpect(status().isOk());
+        Mockito.verify(catService, Mockito.times(1)).updateCat(cat);
     }
+    
     @Test
-    void remove() throws Exception {
-        mockMvc.perform(
+    void removeCatTest() throws Exception {
+        mvc.perform(
                         delete("/cat/{id}", 1))
                 .andExpect(status().isOk());
         verify(catService).deleteCatById(1L);
     }
+    
     @Test
-    void getAll() throws Exception {
-        when(catService.findAllCats()).thenReturn(List.of(new Cat()));
-
-        mockMvc.perform(
-                        get("/cat/all"))
+    void getAllCatsTest() throws Exception {
+        when(catService.findAllCats()).thenReturn(catList);
+        mvc.perform(MockMvcRequestBuilders.get("/cat")
+                        .content(objectMapper.writeValueAsString(catList))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(Matchers.greaterThan(0))))
                 .andExpect(status().isOk());
     }
 
