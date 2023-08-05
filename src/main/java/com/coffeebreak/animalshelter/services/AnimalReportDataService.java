@@ -11,7 +11,11 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
-
+/**
+ * Класс для проверки CRUD-операций класса AnimalReportData
+ * @see AnimalReportData
+ * @see AnimalReportDataRepository
+ */
 @Service
 public class AnimalReportDataService {
     private final AnimalReportDataRepository animalReportDataRepository;
