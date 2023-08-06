@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -23,11 +24,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
- * Тест - класс для проверки CRUD операций в классе - сервисе собаки
- * @see Dog
- * @see DogRepository
+ * Класс для проверки CRUD-операций класса DogService
  * @see DogService
- * @see DogServiceTest
+ * @see DogRepository
  */
 @ExtendWith(MockitoExtension.class)
 public class DogServiceTest {
@@ -43,24 +42,23 @@ public class DogServiceTest {
         expected.setId(1L);
         expected.setNickName("Graf");
         expected.setDogBreed("sheepdog");
-        expected.setAge(2022);
+        expected.setAge(1);
         expected.setDescription("Test");
 
         expected1.setId(2L);
         expected1.setNickName("Rich");
         expected1.setDogBreed("doberman");
-        expected1.setAge(2021);
+        expected1.setAge(2);
         expected1.setDescription("Test");
     }
 
     /**
-     * Тестирование метода <b>add()</b> в DogService
+     * Проверка метода <b>createDog()</b> класса DogService
      * <br>
-     * Mockito: когда вызывается метод <b>DogRepository::save</b>,
-     * возвращается собака <b>expected</b>
+     * Когда вызывается метод <b>DogRepository::save()</b>, возвращается ожидаемый объект класса Dog
      */
     @Test
-    @DisplayName("Проверка добавления новой собаки и сохранения ее в базе данных")
+    @DisplayName("Проверка добавления собаки и сохранения ее в БД")
     public void createDogTest() {
         when(dogRepository.save(any(Dog.class))).thenReturn(expected);
         Dog actual = dogService.createDog(expected);
@@ -72,27 +70,49 @@ public class DogServiceTest {
     }
 
     /**
-     * Тест на создание исключения в методе <b>get()</b> в DogService
+     * Проверка метода <b>findDogById()</b> класса DogService
      * <br>
-     * Mockito: когда вызывается метод <b>DogRepository::findById</b>,
-     * выбрасывается исключение <b>DogNotFoundException</b>
-     * @throws DogNotFoundException
+     * Когда вызывается метод <b>DogRepository::findById()</b>, возвращается ожидаемый объект класса Dog
      */
     @Test
-    @DisplayName("Проверка исключения в методе поиска собаки")
-    public void findDogByIdExceptionTest() {
-        when(dogRepository.findById(any(Long.class))).thenThrow(DogNotFoundException.class);
-        org.junit.jupiter.api.Assertions.assertThrows(DogNotFoundException.class, () -> dogService.findDogById(0L));
+    @DisplayName("Проверка поиска собаки по id")
+    void findDogByIdTest() {
+        Mockito.when(dogRepository.findById(any(Long.class))).thenReturn(Optional.of(expected));
+
+        Dog actual = dogService.findDogById(1L);
+
+        Assertions.assertThat(actual.getId()).isEqualTo(expected.getId());
+        Assertions.assertThat(actual.getNickName()).isEqualTo(expected.getNickName());
+        Assertions.assertThat(actual.getDogBreed()).isEqualTo(expected.getDogBreed());
+        Assertions.assertThat(actual.getAge()).isEqualTo(expected.getAge());
+        Assertions.assertThat(actual.getDescription()).isEqualTo(expected.getDescription());
+
+        // проверяем, что метод findById() был вызван один раз с нужным аргументом
+        Mockito.verify(dogRepository, Mockito.times(1)).findById(1L);
+
+        // проверяем, что метод findById() был вызван только один раз
+        Mockito.verify(dogRepository, Mockito.times(1)).findById(Mockito.anyLong());
     }
 
     /**
-     * Тестирование метода <b>findAllDogs()</b> в DogService
+     * Проверка выбрасывания исключения в методе <b>findDogById()</b> класса DogService
      * <br>
-     * Mockito: когда вызывается метод <b>DogRepository::findAll</b>,
-     * возвращается коллекция собак <b>adopterDogs</b>
+     * Когда вызывается метод <b>DogRepository::findById()</b>, выбрасывается исключение <b>DogNotFoundException</b>
      */
     @Test
-    @DisplayName("Проверка поиска всех собак и возвращения их из базы данных")
+    @DisplayName("Проверка выбрасывания исключения при поиске собаки по id")
+    public void findDogByIdExceptionTest() {
+        when(dogRepository.findById(any(Long.class))).thenThrow(DogNotFoundException.class);
+        org.junit.jupiter.api.Assertions.assertThrows(DogNotFoundException.class, () -> dogService.findDogById(1L));
+    }
+
+    /**
+     * Проверка метода <b>findAllDogs()</b> класса DogService
+     * <br>
+     * Когда вызывается метод <b>DogRepository::findAll()</b>, возвращается коллекция ожидаемых объектов класса Dog
+     */
+    @Test
+    @DisplayName("Проверка поиска списка всех собак")
     public void findAllDogsTest() {
         List<Dog> dogs = new ArrayList<>();
         dogs.add(expected);
@@ -105,10 +125,9 @@ public class DogServiceTest {
     }
 
     /**
-     * Тестирование метода <b>findAllDogs()</b> в DogService
+     * Проверка метода <b>findAllDogs()</b> класса DogService
      * <br>
-     * Mockito: когда вызывается метод <b>DogRepository::findAll</b>,
-     * возвращается пустая коллекция собак <b>adopterDogs</b>
+     * Когда вызывается метод <b>DogRepository::findAll()</b>, возвращается пустая коллекция ожидаемых объектов класса Dog
      */
     @Test
     @DisplayName("Проверка поиска всех собак и возвращения из базы данных пустого списка")
@@ -119,13 +138,12 @@ public class DogServiceTest {
     }
 
     /**
-     * Тестирование метода <b>updateDog()</b> в DogService
+     * Проверка метода <b>updateDog()</b> класса DogService
      * <br>
-     * Mockito: когда вызывается метод <b>DogRepository::findById</b> и <b>DogRepository::save</b>,
-     * возвращается отредактированная собака <b>expected</b>
+     * Когда вызывается метод <b>DogRepository::save()</b>, возвращается ожидаемый объект класса Dog
      */
     @Test
-    @DisplayName("Проверка обновления данных собаки, сохранения и возвращения ее из базы данных")
+    @DisplayName("Проверка изменения (обновления) данных собаки, сохранения и возвращения ее из базы данных")
     public void updateDogTest() {
         when(dogRepository.findById(any(Long.class))).thenReturn(Optional.of(expected));
         when(dogRepository.save(any(Dog.class))).thenReturn(expected);
@@ -138,11 +156,7 @@ public class DogServiceTest {
     }
 
     /**
-     * Тест на создание исключения в методе <b>updateDog()</b> в DogService
-     * <br>
-     * Mockito: когда вызывается метод <b>DogRepository::findById</b>,
-     * выбрасывается исключение <b>DogNotFoundException</b>
-     * @throws DogNotFoundException
+     * Проверка выбрасывания исключения в методе <b>updateDog()</b> класса DogService
      */
     @Test
     @DisplayName("Проверка исключения в методе редактирования собаки")
@@ -151,5 +165,4 @@ public class DogServiceTest {
         org.junit.jupiter.api.Assertions.assertThrows(DogNotFoundException.class,
                 () -> dogService.updateDog(expected));
     }
-
 }

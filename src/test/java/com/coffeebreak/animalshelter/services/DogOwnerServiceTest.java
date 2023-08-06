@@ -166,9 +166,6 @@ public class DogOwnerServiceTest {
 
     /**
      * Тест на создание исключения в методе <b>updateDogOwner()</b> в DogOwnerService
-     * <br>
-     * Mockito: когда вызывается метод <b>DogOwnerRepository::findById</b>,
-     * выбрасывается исключение <b>DogOwnerNotFoundException</b>
      */
     @Test
     @DisplayName("Проверка исключения в методе редактирования владельца собаки")
