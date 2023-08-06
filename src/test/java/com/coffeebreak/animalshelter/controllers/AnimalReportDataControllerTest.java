@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,10 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Класс для проверки методов класса AnimalReportDataController
+ * @see AnimalReportDataService
+ */
 @WebMvcTest(AnimalReportDataController.class)
 class AnimalReportDataControllerTest {
 
@@ -82,8 +87,15 @@ class AnimalReportDataControllerTest {
     void tearDown() {
     }
 
+    /**
+     * Проверка метода <b>createAnimalReportData()</b> в классе AnimalReportDataController
+     * <br>
+     * Когда вызывается метод <b>AnimalReportDataService::createAnimalReportData()</b>, возвращается ожидаемый объект класса AnimalReportData
+     * @throws Exception может возникнуть исключение
+     */
     @Test
-    void createAnimalReportTest() throws Exception {
+    @DisplayName("Проверка метода создания отчета")
+    void createAnimalReportDataTest() throws Exception {
         when(reportDataService.createAnimalReportData(reportTestOne)).thenReturn(reportTestOne);
 
         mvc.perform(MockMvcRequestBuilders.post("/report")
@@ -106,8 +118,15 @@ class AnimalReportDataControllerTest {
         Mockito.verify(reportDataService, Mockito.times(1)).createAnimalReportData(reportTestOne);
     }
 
+    /**
+     * Проверка метода <b>getAllAnimalReportData()</b> в классе AnimalReportDataController
+     * <br>
+     * Когда вызывается метод <b>AnimalReportDataService::findAllAnimalReport()</b>, возвращается коллекция ожидаемых объектов класса AnimalReportData
+     * @throws Exception может возникнуть исключение
+     */
     @Test
-    void getAllDAnimalReportDataTest() throws Exception {
+    @DisplayName("Проверка метода поиска списка всех отчетов")
+    void getAllAnimalReportTest() throws Exception {
         when(reportDataService.findAllAnimalReport()).thenReturn(reportListTest);
         mvc.perform(MockMvcRequestBuilders.get("/report/all_report")
                 .content(objectMapper.writeValueAsString(reportListTest))
@@ -116,7 +135,14 @@ class AnimalReportDataControllerTest {
                 .andExpect(status().isOk());
     }
 
+    /**
+     * Проверка метода <b>updateAnimalReportData()</b> в классе AnimalReportDataController
+     * <br>
+     * Когда вызывается метод <b>AnimalReportDataService::updateAnimalReportData()</b>, возвращается ожидаемый объект класса AnimalReportData
+     * @throws Exception может возникнуть исключение
+     */
     @Test
+    @DisplayName("Проверка метода изменения (обновления) данных отчета")
     void updateAnimalReportDataTest() throws Exception {
         when(reportDataService.updateAnimalReportData(reportTestOne)).thenReturn(reportTestOne);
 
@@ -140,10 +166,16 @@ class AnimalReportDataControllerTest {
         Mockito.verify(reportDataService, Mockito.times(1)).updateAnimalReportData(reportTestOne);
     }
 
+    /**
+     * Проверка метода <b>deleteAnimalReportDataById()</b> в классе AnimalReportDataController
+     * <br>
+     * @throws Exception может возникнуть исключение
+     */
     @Test
+    @DisplayName("Проверка метода удаления отчета")
     void deleteAnimalReportDataByIdTest()throws Exception  {
             doNothing().when(reportDataService).deleteAnimalReportData(reportTestOne.getId());
-            mvc.perform(MockMvcRequestBuilders.delete("/report/{animalReportDataId}",reportTestOne.getId()))
+            mvc.perform(MockMvcRequestBuilders.delete("/report/{animalReportDataId}", reportTestOne.getId()))
                     .andExpect(status().isOk());
     }
 }

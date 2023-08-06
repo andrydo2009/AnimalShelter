@@ -4,12 +4,9 @@ package com.coffeebreak.animalshelter.services;
 import com.coffeebreak.animalshelter.exceptions.AnimalReportDataNotFoundException;
 import com.coffeebreak.animalshelter.models.AnimalReportData;
 import com.coffeebreak.animalshelter.repositories.AnimalReportDataRepository;
-import com.pengrad.telegrambot.model.File;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 
 @Service
 public class AnimalReportDataService {
@@ -44,6 +41,16 @@ public class AnimalReportDataService {
     }
 
     /**
+     * Получение коллекции объектов класса AnimalReportData из БД
+     * <br>
+     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findAll()}
+     * @return коллекция объектов класса AnimalReportData
+     */
+    public Collection<AnimalReportData> findAllAnimalReport() {
+        return animalReportDataRepository.findAll ();
+    }
+
+    /**
      * Изменение объекта класса AnimalReportData и сохранение его в БД
      * <br>
      * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#save(Object)}
@@ -72,16 +79,6 @@ public class AnimalReportDataService {
     }
 
 
-    /**
-     * Получение коллекции объектов класса AnimalReportData из БД
-     * <br>
-     * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findAll()}
-     * @return коллекция объектов класса AnimalReportData
-     */
-    public Collection<AnimalReportData> findAllAnimalReport() {
-        return animalReportDataRepository.findAll ();
-    }
-    
     /*
     пока в работе
     public AnimalReportData findByChatId(Long chatId) {

@@ -3,12 +3,8 @@ package com.coffeebreak.animalshelter.controllers;
 import com.coffeebreak.animalshelter.listener.TelegramBotUpdatesListener;
 import com.coffeebreak.animalshelter.models.AnimalReportData;
 import com.coffeebreak.animalshelter.services.AnimalReportDataService;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +31,12 @@ public class AnimalReportDataController {
 
     @PostMapping
     public ResponseEntity<AnimalReportData> createAnimalReport(@RequestBody AnimalReportData animalReportData) {
-        AnimalReportData createdAnimalReportData = animalReportDataService.createAnimalReportData ( animalReportData );
+        AnimalReportData createdAnimalReportData = animalReportDataService.createAnimalReportData(animalReportData);
         return ResponseEntity.ok(createdAnimalReportData);
     }
 
     @GetMapping("/all_report")
-    public ResponseEntity<Collection<AnimalReportData>> getAllDAnimalReportData() {
+    public ResponseEntity<Collection<AnimalReportData>> getAllAnimalReportData() {
         Collection<AnimalReportData> animalReportDataAll = animalReportDataService.findAllAnimalReport (  );
         if (animalReportDataAll.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -50,7 +46,7 @@ public class AnimalReportDataController {
 
     @PutMapping
     public ResponseEntity<AnimalReportData> updateAnimalReportData(@RequestBody AnimalReportData animalReportData) {
-        AnimalReportData updatedAnimalReportData = animalReportDataService.updateAnimalReportData ( animalReportData );
+        AnimalReportData updatedAnimalReportData = animalReportDataService.updateAnimalReportData(animalReportData);
         if (updatedAnimalReportData == null) {
             return ResponseEntity.notFound().build ();
         }
@@ -59,7 +55,7 @@ public class AnimalReportDataController {
 
     @DeleteMapping("/{animalReportDataId}")
     public ResponseEntity<Void> deleteAnimalReportDataById(@PathVariable("animalReportDataId") Long animalReportData) {
-        animalReportDataService.deleteAnimalReportData (animalReportData);
+        animalReportDataService.deleteAnimalReportData(animalReportData);
         return ResponseEntity.ok().build();
     }
 
