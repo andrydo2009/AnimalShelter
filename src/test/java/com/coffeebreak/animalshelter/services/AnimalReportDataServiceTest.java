@@ -32,10 +32,9 @@ class AnimalReportDataServiceTest {
 
     AnimalReportData reportTestOne = new AnimalReportData();
     AnimalReportData reportTestTwo = new AnimalReportData();
-
     Collection<AnimalReportData> reportListTest=new ArrayList<>();
     @BeforeEach
-    void setUp(){
+    void setUp() {
         reportTestOne.setId(1L);
         reportTestOne.setChatId(1L);
         reportTestOne.setRationOfAnimal("Еда для животного");
@@ -78,9 +77,9 @@ class AnimalReportDataServiceTest {
      * возвращается объект класса AnimalReportData <b>reportTestOne</b>
      */
     @Test
-    void createAnimalReportDataTest(){
+    void createAnimalReportDataTest() {
         // Устанавливаем поведение mock-репозитория при вызове findById
-        when(animalReportDataRepository.save ( reportTestOne )).thenReturn(reportTestOne);
+        when(animalReportDataRepository.save(reportTestOne)).thenReturn(reportTestOne);
         AnimalReportData result = animalReportDataService.createAnimalReportData(reportTestOne);
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result,reportTestOne);
@@ -123,10 +122,10 @@ class AnimalReportDataServiceTest {
      * Тестирование метода <b>findAll()</b> в AnimalReportDataService
      * <br>
      * Mockito: когда вызывается метод <b>AnimalReportDataRepository::findAll</b>,
-     * возвращается объект типа Collection<AnimalReportData>
+     * возвращается объект типа Collection класса AnimalReportData
      */
     @Test
-    void findAllAnimalReportTest(){
+    void findAllAnimalReportTest() {
         // Устанавливаем поведение mock-репозитория при вызове findAll
         when(animalReportDataRepository.findAll()).thenReturn(Arrays.asList(reportTestOne, reportTestTwo));
         // Выполняем метод findAllAnimalReport
@@ -168,7 +167,7 @@ class AnimalReportDataServiceTest {
     @Test
     public void deleteAnimalReportDataTest() {
         // Устанавливаем поведение mock-репозитория при вызове findById
-        when(animalReportDataRepository.save ( reportTestOne )).thenReturn(reportTestOne);
+        when(animalReportDataRepository.save(reportTestOne)).thenReturn(reportTestOne);
         AnimalReportData result = animalReportDataService.createAnimalReportData(reportTestOne);
 
         // Выполняем метод deleteAnimalReportData
