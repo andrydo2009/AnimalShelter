@@ -63,23 +63,23 @@ public class AnimalReportDataController {
         return ResponseEntity.ok().build();
     }
 
-    //работа с файлами
-    @GetMapping("/{id}/photo-from-db")
-    public ResponseEntity<byte[]> downloadPhotoFromDB(@Parameter(description = "report id") @PathVariable Long id) {
-        AnimalReportData reportData = this.animalReportDataService.findById(id);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(fileType));
-        headers.setContentLength(reportData.getData().length);
-
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(reportData.getData());
-    }
-
-    @GetMapping("/message-to-person")
-    public void sendMessageToPerson(@Parameter(description = "id чата с пользователем", example = "3984892310")
-                                    @RequestParam Long chat_Id,
-                                    @Parameter(description = "Ваше сообщение")
-                                    @RequestParam String message) {
-        this.telegramBotUpdatesListener.sendMessage(chat_Id, message);
-    }
+//    //работа с файлами
+//    @GetMapping("/{id}/photo-from-db")
+//    public ResponseEntity<byte[]> downloadPhotoFromDB(@Parameter(description = "report id") @PathVariable Long id) {
+//        AnimalReportData reportData = this.animalReportDataService.findById(id);
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.parseMediaType(fileType));
+//        headers.setContentLength(reportData.getData().length);
+//
+//        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(reportData.getData());
+//    }
+//
+//    @GetMapping("/message-to-person")
+//    public void sendMessageToPerson(@Parameter(description = "id чата с пользователем", example = "3984892310")
+//                                    @RequestParam Long chat_Id,
+//                                    @Parameter(description = "Ваше сообщение")
+//                                    @RequestParam String message) {
+//        this.telegramBotUpdatesListener.sendMessage(chat_Id, message);
+//    }
 }
