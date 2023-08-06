@@ -159,7 +159,6 @@ public class CatOwnerServiceTest {
     /**
      * Проверка выбрасывания исключения в методе <b>updateCatOwner()</b> класса CatOwnerService
      * <br>
-     * Создание объекта <b>CatOwner</b> с id равным null
      */
     @Test
     @DisplayName("Проверка выбрасывания исключения при изменении (обновлении) данных владельца кошки и добавления его в БД")
