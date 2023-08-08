@@ -22,7 +22,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private static final String START_COMMAND = "/start";
 
-
     //Информация о приюте для кошек
     private static final String INFORMATION_ABOUT_CAT_SHELTER = """
             Добро пожаловать в наш приют для котов! Мы являемся безопасным и заботливым домом для множества котов, которые нуждаются в любви, заботе и внимании. Наша миссия - предоставить временный или постоянный дом для котов, которые были потеряны, брошены или находятся в бедственном положении.
@@ -326,7 +325,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             3.Вадим Вадимыч г.Москва тел.+7999888776655
             4.Алеся Кошкина г.Москва тел.+7999888776655
             """;
-
 
     private static final String REGEX_MESSAGE = """
             (Рацион:)(\\s)(\\W+)(;)\s

@@ -4,7 +4,7 @@ import com.coffeebreak.animalshelter.exceptions.CatNotFoundException;
 import com.coffeebreak.animalshelter.models.Cat;
 import com.coffeebreak.animalshelter.repositories.CatRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +18,11 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 
+/**
+ * Класс для проверки CRUD-операций класса CatService
+ * @see CatService
+ * @see CatRepository
+ */
 @ExtendWith(MockitoExtension.class)
 public class CatServiceTest {
     @Mock
@@ -26,12 +31,13 @@ public class CatServiceTest {
     @InjectMocks
     private CatService catService;
 
-    @BeforeEach
-    public void setUp() {
-        // Инициализация заглушек
-    }
-
+    /**
+     * Проверка метода <b>createCat()</b> класса CatService
+     * <br>
+     * Когда вызывается метод <b>CatRepository::save()</b>, возвращается ожидаемый объект класса Cat
+     */
     @Test
+    @DisplayName("Проверка создания кошки и добавления ее в БД")
     public void createCatTest() {
         // Создание нового ожидаемого объекта класса Cat
         Cat expected = new Cat();
@@ -54,7 +60,13 @@ public class CatServiceTest {
     }
 
 
+    /**
+     * Проверка метода <b>findCatById()</b> класса CatService
+     * <br>
+     * Когда вызывается метод <b>CatRepository::findById()</b>, возвращается ожидаемый объект класса Cat
+     */
     @Test
+    @DisplayName("Проверка поиска кошки по id")
     public void findCatByIdTest() {
         // Создание нового ожидаемого объекта класса Cat
         Cat expected = new Cat();
@@ -78,18 +90,28 @@ public class CatServiceTest {
         Assertions.assertEquals(cat.getCatBreed(), expected.getCatBreed());
     }
 
+    /**
+     * Проверка выбрасывания исключения в методе <b>findCatById()</b> класса CatService
+     * <br>
+     * Когда вызывается метод <b>CatRepository::findById()</b>, выбрасывается исключение <b>CatNotFoundException</b>
+     */
     @Test
+    @DisplayName("Проверка выбрасывания исключения при поиске кошки по id")
     public void findCatByIdExceptionTest() {
         // Установка значения для заглушки
         Mockito.when(catRepositoryMock.findById(1L)).thenThrow(CatNotFoundException.class);
 
         // Проверка выбрасывания исключения
-        Assertions.assertThrows(CatNotFoundException.class, () -> {
-            catService.findCatById(1L);
-        });
+        Assertions.assertThrows(CatNotFoundException.class, () -> catService.findCatById(1L));
     }
 
+    /**
+     * Проверка метода <b>findAllCats()</b> класса CatService
+     * <br>
+     * Когда вызывается метод <b>CatRepository::findAll()</b>, возвращается коллекция ожидаемых объектов класса Cat
+     */
     @Test
+    @DisplayName("Проверка поиска списка всех кошек")
     public void findAllCatsTest() {
         // Создание списка ожидаемых объектов класса Cat
         List<Cat> expected = new ArrayList<>();
@@ -123,7 +145,13 @@ public class CatServiceTest {
         Assertions.assertEquals(actual, expected);
     }
 
+    /**
+     * Проверка метода <b>updateCat()</b> класса CatService
+     * <br>
+     * Когда вызывается метод <b>CatRepository::save()</b>, возвращается ожидаемый объект класса Cat
+     */
     @Test
+    @DisplayName("Проверка изменения (обновления) данных кошки и добавления ее в БД")
     public void updateCatTest() {
         // Создание нового ожидаемого объекта класса Cat
         Cat expected = new Cat();
@@ -145,7 +173,11 @@ public class CatServiceTest {
         Assertions.assertEquals(actual.getCatBreed(), expected.getCatBreed());
     }
 
+    /**
+     * Проверка выбрасывания исключения в методе <b>updateCat()</b> класса CatService
+     */
     @Test
+    @DisplayName("Проверка выбрасывания исключения при изменении (обновлении) данных кошки и добавления ее в БД")
     public void updateCatExceptionTest() {
         // Создание нового ожидаемого объекта класса Cat
         Cat expected = new Cat();
@@ -158,9 +190,7 @@ public class CatServiceTest {
         Mockito.when(catRepositoryMock.findById(1L)).thenThrow(CatNotFoundException.class);
 
         // Проверка выбрасывания исключения
-        Assertions.assertThrows(CatNotFoundException.class, () -> {
-            catService.updateCat(expected);
-        });
+        Assertions.assertThrows(CatNotFoundException.class, () -> catService.updateCat(expected));
     }
 }
 
