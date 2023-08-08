@@ -80,7 +80,7 @@ public class AnimalShelterKeyboard {
                 new KeyboardButton("Контакты проверенных кинологов"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтёра"),
                 new KeyboardButton("Вернуться в меню"));
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Мы очень рады что вы хотите завести нового друга. Выберите что вас интересует:")
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Мы очень рады что вы хотите завести нового друга. Выберите что вас интересует:");
     }
 
     public void returnResponseReplyKeyboardMarkup(ReplyKeyboardMarkup replyKeyboardMarkup, Long chatId, String text) {
