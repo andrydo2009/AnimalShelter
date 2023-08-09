@@ -16,7 +16,6 @@ public class AnimalReportDataService {
         this.animalReportDataRepository = animalReportDataRepository;
     }
 
-
     /**
      * Создание объекта класса AnimalReportData и сохранение его в БД
      * <br>
@@ -25,7 +24,7 @@ public class AnimalReportDataService {
      * @return созданный объект класса AnimalReportData
      */
     public AnimalReportData createAnimalReportData(AnimalReportData animalReportData) {
-        return animalReportDataRepository.save ( animalReportData );
+        return animalReportDataRepository.save(animalReportData);
     }
 
     /**
@@ -37,7 +36,7 @@ public class AnimalReportDataService {
      * @throws AnimalReportDataNotFoundException если объект класса AnimalReportData не был найден в БД
      */
     public AnimalReportData findById(Long id) {
-        return animalReportDataRepository.findById ( id ).orElseThrow ( AnimalReportDataNotFoundException::new );
+        return animalReportDataRepository.findById(id).orElseThrow(AnimalReportDataNotFoundException::new);
     }
 
     /**
@@ -47,7 +46,7 @@ public class AnimalReportDataService {
      * @return коллекция объектов класса AnimalReportData
      */
     public Collection<AnimalReportData> findAllAnimalReport() {
-        return animalReportDataRepository.findAll ();
+        return animalReportDataRepository.findAll();
     }
 
     /**
@@ -59,13 +58,12 @@ public class AnimalReportDataService {
      * @throws AnimalReportDataNotFoundException если объект класса AnimalReportData не был найден в БД
      */
     public AnimalReportData updateAnimalReportData(AnimalReportData animalReportData) {
-        if (animalReportData.getId () != null) {
-            if (findById ( animalReportData.getId () ) != null) {
-                return animalReportDataRepository.save ( animalReportData );
+        if (animalReportData.getId() != null) {
+            if (findById(animalReportData.getId()) != null) {
+                return animalReportDataRepository.save (animalReportData);
             }
         }
         throw new AnimalReportDataNotFoundException();
-
     }
 
     /**
@@ -75,48 +73,7 @@ public class AnimalReportDataService {
      * @param id идентификатор искомого объекта класса AnimalReportData, не может быть null
      */
     public void deleteAnimalReportData(Long id) {
-        animalReportDataRepository.deleteById ( id );
+        animalReportDataRepository.deleteById (id);
     }
 
-
-    /*
-    пока в работе
-    public AnimalReportData findByChatId(Long chatId) {
-        return animalReportDataRepository.findByChatId ( chatId );
-    }
-
-    public Collection<AnimalReportData> findListAnimalReport(Long chatId) {
-        return animalReportDataRepository.findAllByChatId ( chatId );
-    }*/
-
-//    //работа с файлами пока тестовый вариант
-//    public void uploadReportData(Long personId, byte[] pictureFile, File file, String ration, String health,
-//                                 String habits, String filePath, Date dateSendMessage, Long timeDate, long daysOfReports) throws IOException {
-//        AnimalReportData report = new AnimalReportData();
-//        report.setLastMessage(dateSendMessage);
-//        report.setDaysOfOwnership(daysOfReports);
-//        report.setFilePath(filePath);
-//        report.setFileSize(file.fileSize());
-//        report.setLastMessageMs(timeDate);
-//        report.setChatId(personId);
-//        report.setData(pictureFile);
-//        report.setRationOfAnimal(ration);
-//        report.setHealthOfAnimal(health);
-//        report.setHabitsOfAnimal(habits);
-//        this.animalReportDataRepository.save(report);
-//    }
-//
-//    public void uploadReportData(Long personId, byte[] pictureFile, File file,
-//                                 String caption, String filePath, Date dateSendMessage, Long timeDate, long daysOfReports) throws IOException {
-//        AnimalReportData report = new AnimalReportData();//findById(ownerId);
-//        report.setLastMessage(dateSendMessage);
-//        report.setDaysOfOwnership(daysOfReports);
-//        report.setFilePath(filePath);
-//        report.setChatId(personId);
-//        report.setFileSize(file.fileSize());
-//        report.setData(pictureFile);
-//        report.setCaption(caption);
-//        report.setLastMessageMs(timeDate);
-//        this.animalReportDataRepository.save(report);
-//    }
 }

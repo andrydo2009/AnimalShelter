@@ -2,7 +2,10 @@ package com.coffeebreak.animalshelter.controllers;
 
 import com.coffeebreak.animalshelter.listener.TelegramBotUpdatesListener;
 import com.coffeebreak.animalshelter.models.AnimalReportData;
+import com.coffeebreak.animalshelter.models.AnimalReportPhoto;
+import com.coffeebreak.animalshelter.repositories.AnimalReportPhotoRepository;
 import com.coffeebreak.animalshelter.services.AnimalReportDataService;
+import com.coffeebreak.animalshelter.services.AnimalReportPhotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -13,10 +16,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 
 /**
@@ -30,17 +42,25 @@ import java.util.Collection;
 public class AnimalReportDataController {
     @Autowired
     private TelegramBotUpdatesListener telegramBotUpdatesListener;
-    private final String fileType = "image/jpeg";
 
-    private  final AnimalReportDataService animalReportDataService;
+    private final AnimalReportDataService animalReportDataService;
 
-    public AnimalReportDataController(AnimalReportDataService animalReportDataService) {
+    private final AnimalReportPhotoService animalReportPhotoService;
+
+    private final AnimalReportPhotoRepository animalReportPhotoRepository;
+
+    public AnimalReportDataController(AnimalReportDataService animalReportDataService,
+                                      AnimalReportPhotoService animalReportPhotoService,
+                                      AnimalReportPhotoRepository animalReportPhotoRepository) {
         this.animalReportDataService = animalReportDataService;
+        this.animalReportPhotoService = animalReportPhotoService;
+        this.animalReportPhotoRepository = animalReportPhotoRepository;
     }
+
 
     @PostMapping
     @Operation(
-            summary = "Создать нового отчет о животном",
+            summary = "Создать новый отчет о животном",
             description = "Создание нового отчета о животном с его уникальным идентификатором"
     )
     @ApiResponses(value = {
@@ -95,7 +115,7 @@ public class AnimalReportDataController {
             )
     })
     public ResponseEntity<Collection<AnimalReportData>> getAllAnimalReportData() {
-        Collection<AnimalReportData> animalReportDataAll = animalReportDataService.findAllAnimalReport (  );
+        Collection<AnimalReportData> animalReportDataAll = animalReportDataService.findAllAnimalReport();
         if (animalReportDataAll.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -138,7 +158,7 @@ public class AnimalReportDataController {
     public ResponseEntity<AnimalReportData> updateAnimalReportData(@RequestBody AnimalReportData animalReportData) {
         AnimalReportData updatedAnimalReportData = animalReportDataService.updateAnimalReportData(animalReportData);
         if (updatedAnimalReportData == null) {
-            return ResponseEntity.notFound().build ();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedAnimalReportData);
     }
@@ -166,23 +186,38 @@ public class AnimalReportDataController {
         return ResponseEntity.ok().build();
     }
 
-//    //работа с файлами
-//    @GetMapping("/{id}/photo-from-db")
-//    public ResponseEntity<byte[]> downloadPhotoFromDB(@Parameter(description = "report id") @PathVariable Long id) {
-//        AnimalReportData reportData = this.animalReportDataService.findById(id);
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.parseMediaType(fileType));
-//        headers.setContentLength(reportData.getData().length);
-//
-//        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(reportData.getData());
-//    }
-//
-//    @GetMapping("/message-to-person")
-//    public void sendMessageToPerson(@Parameter(description = "id чата с пользователем", example = "3984892310")
-//                                    @RequestParam Long chat_Id,
-//                                    @Parameter(description = "Ваше сообщение")
-//                                    @RequestParam String message) {
-//        this.telegramBotUpdatesListener.sendMessage(chat_Id, message);
-//    }
+    //работа с файлами
+    @PostMapping(value = "/{id}/photo_report", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> uploadPhotoReport(@PathVariable("id") Long id, @RequestParam("file") MultipartFile file) throws IOException {
+        if (file.getSize() >= 1024 * 300) {
+            return ResponseEntity.badRequest().body("File is too big");
+        }
+        animalReportPhotoService.uploadAnimalPhotoReportFile(id, file);
+        return ResponseEntity.ok().build();
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @GetMapping("/{id}/photo_report/data")
+    public ResponseEntity<byte[]> downloadPhotoReport(@PathVariable("id") Long id) {
+        AnimalReportPhoto animalReportPhoto = animalReportPhotoService.findAnimalReportPhotoByAnimalReportDataId(id).get();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(animalReportPhoto.getMediaTypeFile()));
+        headers.setContentLength(animalReportPhoto.getData().length);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(animalReportPhoto.getData());
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @GetMapping(value = "{id}/photo_report")
+    public void downloadPhotoReport(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+        AnimalReportPhoto animalReportPhoto = animalReportPhotoService.findAnimalReportPhotoByAnimalReportDataId(id).get();
+        Path path = Path.of(animalReportPhoto.getFilePath());
+        try (InputStream is = Files.newInputStream(path);
+             OutputStream os = response.getOutputStream()
+        ){
+            response.setStatus(200);
+            response.setContentType(animalReportPhoto.getMediaTypeFile());
+            response.setContentLength(Math.toIntExact(animalReportPhoto.getFileSize()));
+            is.transferTo(os);
+        }
+    }
 }
