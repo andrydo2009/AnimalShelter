@@ -19,6 +19,8 @@ public class CatOwner {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // контактный номер телефона хозяина животного
 
+    private OwnershipStatus status;
+
     public CatOwner() {
     }
 
@@ -73,6 +75,14 @@ public class CatOwner {
         return phoneNumber;
     }
 
+    public OwnershipStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OwnershipStatus status) {
+        this.status = status;
+    }
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
@@ -82,12 +92,12 @@ public class CatOwner {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CatOwner catOwner = (CatOwner) o;
-        return Objects.equals(id, catOwner.id) && Objects.equals(fullName, catOwner.fullName) && Objects.equals(age, catOwner.age) && Objects.equals(address, catOwner.address) && Objects.equals(phoneNumber, catOwner.phoneNumber);
+        return Objects.equals(id, catOwner.id) && Objects.equals(fullName, catOwner.fullName) && Objects.equals(age, catOwner.age) && Objects.equals(address, catOwner.address) && Objects.equals(phoneNumber, catOwner.phoneNumber) && status == catOwner.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullName, age, address, phoneNumber);
+        return Objects.hash(id, fullName, age, address, phoneNumber, status);
     }
 
     @Override
@@ -98,6 +108,7 @@ public class CatOwner {
                 ", age=" + age +
                 ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", status=" + status +
                 '}';
     }
 }
