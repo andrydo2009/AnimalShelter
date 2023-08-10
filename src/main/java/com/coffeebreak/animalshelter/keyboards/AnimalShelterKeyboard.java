@@ -20,7 +20,6 @@ public class AnimalShelterKeyboard {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
                 new KeyboardButton("Приют для кошек"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Приют для собак"));
-//        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Выберите кого хотите приютить:");
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Добро пожаловать! Я бот приюта для животных. Выберите приют: Приют для кошек или Приют для собак.");
     }
 
@@ -29,15 +28,14 @@ public class AnimalShelterKeyboard {
                 new KeyboardButton("Узнать информацию о приюте"), new KeyboardButton("Как взять кота из приюта"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Выбрать кота"), new KeyboardButton("Прислать отчет о питомце"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтёра"), new KeyboardButton("Главное меню"));
-//        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Главное меню");
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Вы выбрали приют для кошек");
     }
+
     public void sendMenuDogShelter(Long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
                 new KeyboardButton("Узнать информацию о приюте"), new KeyboardButton("Как взять собаку из приюта"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Выбрать собаку"), new KeyboardButton("Прислать отчет о питомце"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтёра"), new KeyboardButton("Главное меню"));
-//        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Главное меню");
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Вы выбрали приют для собак");
     }
 
@@ -47,10 +45,9 @@ public class AnimalShelterKeyboard {
 //                , new KeyboardButton("Оставить контактные данные").requestContact(true));
         replyKeyboardMarkup.addRow(new KeyboardButton("Расписание"), new KeyboardButton("Оформление пропуска"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Техника безопасности"), new KeyboardButton("Позвать волонтёра"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Главное меню"));
+        replyKeyboardMarkup.addRow(new KeyboardButton("Вернуться в меню"));
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Какая информация вас интересует?");
     }
-
 
     public void sendMenuHowToTakeCat(Long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
