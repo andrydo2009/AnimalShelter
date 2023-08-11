@@ -3,7 +3,11 @@ package com.coffeebreak.animalshelter.listener;
 
 import com.coffeebreak.animalshelter.keyboards.AnimalShelterKeyboard;
 import com.coffeebreak.animalshelter.models.AnimalReportData;
+import com.coffeebreak.animalshelter.models.CatOwner;
+import com.coffeebreak.animalshelter.models.DogOwner;
 import com.coffeebreak.animalshelter.repositories.AnimalReportDataRepository;
+import com.coffeebreak.animalshelter.repositories.CatOwnerRepository;
+import com.coffeebreak.animalshelter.repositories.DogOwnerRepository;
 import com.coffeebreak.animalshelter.services.AnimalReportDataService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
@@ -20,6 +24,7 @@ import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
@@ -28,6 +33,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static com.coffeebreak.animalshelter.listener.Constants.*;
 
@@ -39,6 +45,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Autowired
     AnimalReportDataRepository reportDataRepository;
+
+    @Autowired
+    CatOwnerRepository catOwnerRepository;
+
+    @Autowired
+    DogOwnerRepository dogOwnerRepository;
 
     private final TelegramBot telegramBot;
     private final AnimalShelterKeyboard animalShelterKeyboard;
@@ -60,7 +72,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-//                GetUpdates getUpdates = new GetUpdates().limit(100).offset(422245615).timeout(0);
+//                GetUpdates getUpdates = new GetUpdates().limit(100).offset(422245773).timeout(0);
 //        GetUpdatesResponse updatesResponse = telegramBot.execute(getUpdates);
 //        List<Update> updates1 = updatesResponse.updates();
 //        for (Update updateClear : updates1) {
@@ -81,207 +93,207 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     daysOfReports = reportDataRepository.findAll().stream()
                             .filter(s -> s.getChatId().equals(chatId))
                             .count() + 1;
+                    try {
+                        long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
+                        Long lastMessageTime = reportDataRepository.findAll().stream()
+                                .filter(s -> Objects.equals(s.getChatId(), chatId))
+                                .map(AnimalReportData::getLastMessageMs)
+                                .max(Long::compare)
+                                .orElse(null);
+                        if (lastMessageTime != null) {
+                            Date lastDateSendMessage = new Date(lastMessageTime * 1000);
+                            long numberOfDay = lastDateSendMessage.getDate();
 
-                    long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
-                    Long lastMessageTime = reportDataRepository.findAll().stream()
-                            .filter(s -> Objects.equals(s.getChatId(), chatId))
-                            .map(AnimalReportData::getLastMessageMs)
-                            .max(Long::compare)
-                            .orElseGet(() -> null);
-                    if (lastMessageTime != null) {
-                        Date lastDateSendMessage = new Date(lastMessageTime * 1000);
-                        long numberOfDay = lastDateSendMessage.getDate();
-
-                        if (daysOfReports < 30) {
-                            if (compareTime != numberOfDay) {
-                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
-                                    getReport(update);
+                            if (daysOfReports < 30) {
+                                if (compareTime != numberOfDay) {
+                                    if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                                        getReport(update);
+                                    }
+                                } else {
+                                    if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                                        sendMessage(chatId, "Вы уже отправляли отчет сегодня");
+                                    }
                                 }
-                            } else {
-                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
-                                    sendMessage(chatId, "Вы уже отправляли отчет сегодня");
+                                if (daysOfReports == 31) {
+                                    sendMessage(chatId, "Вы прошли испытательный срок!");
                                 }
                             }
-                            if (daysOfReports == 31) {
-                                sendMessage(chatId, "Вы прошли испытательный срок!");
+                        } else {
+                            if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                                getReport(update);
                             }
                         }
-                    } else {
-                        if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
-                            getReport(update);
+                        if (update.message() != null && update.message().photo() != null && update.message().caption() == null) {
+                            sendMessage(chatId, "Отчет нужно присылать с описанием!");
                         }
-                    }
-                    if (update.message() != null && update.message().photo() != null && update.message().caption() == null) {
-                        sendMessage(chatId, "Отчет нужно присылать с описанием!");
-                    }
+                        if (update.message() != null && update.message().contact() != null) {
+                                getContactOwner(update);
+                        }
+                        switch (messageText) {
 
-                    if (update.message() != null && update.message().contact() != null) {
-                        //    getContactOwner(update);
-                    }
-
-                    switch (messageText) {
-
-                        case START_COMMAND:
-                            animalShelterKeyboard.chooseMenu(chatId);
-                            break;
-
-                        case "Приют для кошек":
-                            isCat = true;
-                            animalShelterKeyboard.sendMenuCatShelter(chatId);
-//                            sendMessage(chatId, "Вы выбрали приют для кошек");
-                            break;
-
-                        case "Приют для собак":
-                            isCat = false;
-                            animalShelterKeyboard.sendMenuDogShelter(chatId);
-//                        sendMessage(chatId, "Вы выбрали приют для собак");
-                            break;
-
-
-                        case "Главное меню":
-                            animalShelterKeyboard.chooseMenu(chatId);
-                            break;
-
-                        case "Узнать информацию о приюте":
-                            animalShelterKeyboard.sendMenuInformationAboutShelter(chatId);
-                            break;
-
-                        case "Информация о приюте":
-                            if (isCat) {
-                                sendMessage(chatId, INFORMATION_ABOUT_CAT_SHELTER);
+                            case START_COMMAND:
+                                animalShelterKeyboard.chooseMenu(chatId);
                                 break;
-                            } else {
-                                sendMessage(chatId, INFORMATION_ABOUT_DOG_SHELTER);
-                            }
-                            break;
 
-                        case "Прислать отчет о питомце":
-                            sendMessage(chatId, INFORMATION_ABOUT_REPORT);
-                            sendMessage(chatId, REPORT_EXAMPLE);
-                            break;
-
-                        case "Вернуться в меню":
-                            if (isCat) {
+                            case "Приют для кошек":
+                                isCat = true;
                                 animalShelterKeyboard.sendMenuCatShelter(chatId);
+//                            sendMessage(chatId, "Вы выбрали приют для кошек");
                                 break;
-                            } else {
+
+                            case "Приют для собак":
+                                isCat = false;
                                 animalShelterKeyboard.sendMenuDogShelter(chatId);
-                            }
-                            break;
-
-                        case "Расписание":
-                            if (isCat) {
-                                sendMessage(chatId, SCHEDULE_ABOUT_CAT_SHELTER);
+//                        sendMessage(chatId, "Вы выбрали приют для собак");
                                 break;
-                            } else {
-                                sendMessage(chatId, SCHEDULE_ABOUT_DOG_SHELTER);
+
+                            case "Главное меню":
+                                animalShelterKeyboard.chooseMenu(chatId);
                                 break;
-                            }
 
-                        case "Оформление пропуска":
-                            if (isCat) {
-                                sendMessage(chatId, REGISTRATION_OF_PASS_ABOUT_CAT_SHELTER);
+                            case "Узнать информацию о приюте":
+                                animalShelterKeyboard.sendMenuInformationAboutShelter(chatId);
                                 break;
-                            } else {
-                                sendMessage(chatId, REGISTRATION_OF_PASS_ABOUT_DOG_SHELTER);
+
+                            case "Информация о приюте":
+                                if (isCat) {
+                                    sendMessage(chatId, INFORMATION_ABOUT_CAT_SHELTER);
+                                    break;
+                                } else {
+                                    sendMessage(chatId, INFORMATION_ABOUT_DOG_SHELTER);
+                                }
                                 break;
-                            }
 
-                        case "Техника безопасности":
-                            sendMessage(chatId, TECHNICAL_SAFETY);
-                            break;
-
-                        case "Важная информация":
-                            if (isCat) {
-                                sendMessage(chatId, INFORMATION_HOW_TO_TAKE_CAT);
+                            case "Прислать отчет о питомце":
+                                sendMessage(chatId, INFORMATION_ABOUT_REPORT);
+                                sendMessage(chatId, REPORT_EXAMPLE);
                                 break;
-                            } else {
-                                sendMessage(chatId, INFORMATION_HOW_TO_TAKE_DOG);
+
+                            case "Вернуться в меню":
+                                if (isCat) {
+                                    animalShelterKeyboard.sendMenuCatShelter(chatId);
+                                    break;
+                                } else {
+                                    animalShelterKeyboard.sendMenuDogShelter(chatId);
+                                }
                                 break;
-                            }
 
-                        case "Правила знакомства":
-                            if (isCat) {
-                                sendMessage(chatId, RULES_FOR_GETTING_TO_KNOW_A_CAT);
+                            case "Расписание":
+                                if (isCat) {
+                                    sendMessage(chatId, SCHEDULE_ABOUT_CAT_SHELTER);
+                                    break;
+                                } else {
+                                    sendMessage(chatId, SCHEDULE_ABOUT_DOG_SHELTER);
+                                    break;
+                                }
+
+                            case "Оформление пропуска":
+                                if (isCat) {
+                                    sendMessage(chatId, REGISTRATION_OF_PASS_ABOUT_CAT_SHELTER);
+                                    break;
+                                } else {
+                                    sendMessage(chatId, REGISTRATION_OF_PASS_ABOUT_DOG_SHELTER);
+                                    break;
+                                }
+
+                            case "Техника безопасности":
+                                sendMessage(chatId, TECHNICAL_SAFETY);
                                 break;
-                            } else {
-                                sendMessage(chatId, RULES_FOR_GETTING_TO_KNOW_A_DOG);
+
+                            case "Важная информация":
+                                if (isCat) {
+                                    sendMessage(chatId, INFORMATION_HOW_TO_TAKE_CAT);
+                                    break;
+                                } else {
+                                    sendMessage(chatId, INFORMATION_HOW_TO_TAKE_DOG);
+                                    break;
+                                }
+
+                            case "Правила знакомства":
+                                if (isCat) {
+                                    sendMessage(chatId, RULES_FOR_GETTING_TO_KNOW_A_CAT);
+                                    break;
+                                } else {
+                                    sendMessage(chatId, RULES_FOR_GETTING_TO_KNOW_A_DOG);
+                                    break;
+                                }
+
+                            case "Список документов":
+                                sendMessage(chatId, LIST_OF_DOCUMENTS);
                                 break;
-                            }
 
-                        case "Список документов":
-                            sendMessage(chatId, LIST_OF_DOCUMENTS);
-                            break;
+                            case "Рекомендации к транспортировке":
+                                if (isCat) {
+                                    sendMessage(chatId, RECOMMENDATIONS_FOR_TRANSPORTATION_CAT);
+                                    break;
+                                } else {
+                                    sendMessage(chatId, RECOMMENDATIONS_FOR_TRANSPORTATION_DOG);
+                                    break;
+                                }
 
-                        case "Рекомендации к транспортировке":
-                            if (isCat) {
-                                sendMessage(chatId, RECOMMENDATIONS_FOR_TRANSPORTATION_CAT);
+                            case "Обустройство жилья котёнка":
+                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_KITTEN);
                                 break;
-                            } else {
-                                sendMessage(chatId, RECOMMENDATIONS_FOR_TRANSPORTATION_DOG);
+
+                            case "Обустройство жилья взрослого кота":
+                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_ADULT_CAT);
                                 break;
-                            }
 
-                        case "Обустройство жилья котёнка":
-                            sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_KITTEN);
-                            break;
+                            case "Обустройство жилья кота с инвалидностью":
+                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_CAT_WITH_A_DISABILITY);
+                                break;
 
-                        case "Обустройство жилья взрослого кота":
-                            sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_ADULT_CAT);
-                            break;
+                            case "Причины по которым можем не выдать питомца":
+                                sendMessage(chatId, INFORMATION_WE_DO_NOT_GIVE_OUT_PETS);
+                                break;
 
-                        case "Обустройство жилья кота с инвалидностью":
-                            sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_CAT_WITH_A_DISABILITY);
-                            break;
+                            case "Позвать волонтёра":
+                                sendMessage(chatId, "Я передал ваше сообщение волонтёру, он скоро с вами свяжется. " +
+                                        "Если у вас закрытый профиль - поделитесь контактом. " +
+                                        "Нажмите справа сверху на  - \"отправить контактные данные\" и волонтёр вам перезвонит");
+                                sendForwardMessage(chatId, update.message().messageId());
+                                break;
 
-                        case "Причины по которым можем не выдать питомца":
-                            sendMessage(chatId, INFORMATION_WE_DO_NOT_GIVE_OUT_PETS);
-                            break;
+                            case "Как взять кота из приюта":
+                                animalShelterKeyboard.sendMenuHowToTakeCat(chatId);
+                                break;
 
-                        case "Позвать волонтёра":
-                            sendMessage(chatId, "Я передал ваше сообщение волонтёру, он скоро с вами свяжется. " +
-                                    "Если у вас закрытый профиль - поделитесь контактом. " +
-                                    "Нажмите справа сверху на  - \"отправить контактные данные\" и волонтёр вам перезвонит");
-                            sendForwardMessage(chatId, update.message().messageId());
-                            break;
+                            case "Как взять собаку из приюта":
+                                animalShelterKeyboard.sendMenuHowToTakeDog(chatId);
+                                break;
 
-                        case "Как взять кота из приюта":
-                            animalShelterKeyboard.sendMenuHowToTakeCat(chatId);
-                            break;
+                            case "Обустройство жилья щенка":
+                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_PUPPY);
+                                break;
 
-                        case "Как взять собаку из приюта":
-                            animalShelterKeyboard.sendMenuHowToTakeDog(chatId);
-                            break;
+                            case "Обустройство жилья взрослой собаки":
+                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_DOG);
+                                break;
 
-                        case "Обустройство жилья щенка":
-                            sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_PUPPY);
-                            break;
+                            case "Обустройство жилья собаки с инвалидностью":
+                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_DOG_WITH_A_DISABILITY);
+                                break;
 
-                        case "Обустройство жилья взрослой собаки":
-                            sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_DOG);
-                            break;
+                            case "Советы кинолога":
+                                sendMessage(chatId, TIPS_FROM_A_DOG_HANDLER);
+                                break;
 
-                        case "Обустройство жилья собаки с инвалидностью":
-                            sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_DOG_WITH_A_DISABILITY);
-                            break;
+                            case "Контакты проверенных кинологов":
+                                sendMessage(chatId, CONTACTS_OF_THE_DOG_HANDLER);
+                                break;
 
-                        case "Советы кинолога":
-                            sendMessage(chatId, TIPS_FROM_A_DOG_HANDLER);
-                            break;
+                            case "":
+                                System.out.println("Так нельзя");
+                                sendMessage(chatId, "Пустое сообщение");
+                                break;
 
-                        case "Контакты проверенных кинологов":
-                            sendMessage(chatId, CONTACTS_OF_THE_DOG_HANDLER);
-                            break;
-
-                        case "":
-                            System.out.println("Так нельзя");
-                            sendMessage(chatId, "Пустое сообщение");
-                            break;
-
-                        default:
-                            // Обработка незапланированного сценария
-                            sendReplyMessage(chatId, "Неизвестная команда", update.message().messageId());
-                            break;
+                            default:
+                                // Обработка незапланированного сценария
+                                sendReplyMessage(chatId, "Неизвестная команда", update.message().messageId());
+                                break;
+                        }
+                    } catch (NullPointerException e) {
+                        System.out.println("Возникла ошибка!");
                     }
                 }
         });
@@ -304,6 +316,49 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         SendResponse sendResponse = telegramBot.execute(sendMessage);
         if (!sendResponse.isOk()) {
             logger.error("Error during sending message: {}", sendResponse.description());
+        }
+    }
+
+    // в работе
+    public void getContactOwner(Update update) {
+        if (update.message().contact() != null) {
+            String firstName = update.message().contact().firstName();
+            String lastName = update.message().contact().lastName();
+            String phone = update.message().contact().phoneNumber();
+            String username = update.message().chat().username();
+            // по-моему это не не то, что нужно
+//            String address = update.message().chat().location().address();
+            Long finalChatId = update.message().chat().id();
+            var sortChatId = dogOwnerRepository.findAll().stream()
+                    .filter(i -> Objects.equals(i.getChatId(),finalChatId))
+                    .toList();
+            var sortChatIdCat = catOwnerRepository.findAll().stream()
+                    .filter(i -> Objects.equals(i.getChatId(),finalChatId))
+                    .toList();
+
+            if (!sortChatId.isEmpty() || !sortChatIdCat.isEmpty()) {
+                sendMessage(finalChatId, "Вы уже в базе!");
+                return;
+            }
+            if (lastName != null) {
+                String name = firstName + " " + lastName + " " + username;
+                if(isCat){
+                    catOwnerRepository.save(new CatOwner(finalChatId, name, phone));
+                } else {
+                    dogOwnerRepository.save(new DogOwner(finalChatId, name, phone));
+                }
+                sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
+                return;
+            }
+            if (isCat) {
+                catOwnerRepository.save(new CatOwner(finalChatId, firstName, phone));
+            } else {
+                dogOwnerRepository.save(new DogOwner(finalChatId, firstName, phone));
+            }
+            sendMessage(finalChatId, "Вас успешно добавили в базу! Скоро вам перезвонят.");
+            // Сообщение в чат волонтерам
+            sendMessage(TELEGRAM_CHAT_VOLUNTEERS, firstName + " " + phone + " Добавил(а) свой номер в базу");
+            sendForwardMessage(finalChatId, update.message().messageId());
         }
     }
 
@@ -356,4 +411,20 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         }
     }
 
+
+    @Scheduled(cron = "* 30 21 * * *")
+    public void checkResults() {
+        if (daysOfReports < 30) {
+            var twoDay = 172800000;
+            var nowTime = new Date().getTime() - twoDay;
+            var getDistinct = this.reportDataRepository.findAll().stream()
+                    .sorted(Comparator
+                            .comparing(AnimalReportData::getChatId))
+                    .max(Comparator
+                            .comparing(AnimalReportData::getLastMessageMs));
+            getDistinct.stream()
+                    .filter(i -> i.getLastMessageMs() * 1000 < nowTime)
+                    .forEach(s -> sendMessage(s.getChatId(), "Вы забыли прислать отчет, скорее поторопитесь сделать это!"));
+        }
+    }
 }
