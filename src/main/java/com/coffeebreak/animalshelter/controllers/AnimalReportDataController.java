@@ -196,28 +196,28 @@ public class AnimalReportDataController {
         return ResponseEntity.ok().build();
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    @GetMapping("/{id}/photo_report/data")
-    public ResponseEntity<byte[]> downloadPhotoReport(@PathVariable("id") Long id) {
-        AnimalReportPhoto animalReportPhoto = animalReportPhotoService.findAnimalReportPhotoByAnimalReportDataId(id).get();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(animalReportPhoto.getMediaTypeFile()));
-        headers.setContentLength(animalReportPhoto.getData().length);
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(animalReportPhoto.getData());
-    }
-
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    @GetMapping(value = "{id}/photo_report")
-    public void downloadPhotoReport(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
-        AnimalReportPhoto animalReportPhoto = animalReportPhotoService.findAnimalReportPhotoByAnimalReportDataId(id).get();
-        Path path = Path.of(animalReportPhoto.getFilePath());
-        try (InputStream is = Files.newInputStream(path);
-             OutputStream os = response.getOutputStream()
-        ){
-            response.setStatus(200);
-            response.setContentType(animalReportPhoto.getMediaTypeFile());
-            response.setContentLength(Math.toIntExact(animalReportPhoto.getFileSize()));
-            is.transferTo(os);
-        }
-    }
+//    @SuppressWarnings("OptionalGetWithoutIsPresent")
+//    @GetMapping("/{id}/photo_report/data")
+//    public ResponseEntity<byte[]> downloadPhotoReport(@PathVariable("id") Long id) {
+//        AnimalReportPhoto animalReportPhoto = animalReportPhotoService.findAnimalReportPhotoByAnimalReportDataId(id).get();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.parseMediaType(animalReportPhoto.getMediaTypeFile()));
+//        headers.setContentLength(animalReportPhoto.getData().length);
+//        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(animalReportPhoto.getData());
+//    }
+//
+//    @SuppressWarnings("OptionalGetWithoutIsPresent")
+//    @GetMapping(value = "{id}/photo_report")
+//    public void downloadPhotoReport(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
+//        AnimalReportPhoto animalReportPhoto = animalReportPhotoService.findAnimalReportPhotoByAnimalReportDataId(id).get();
+//        Path path = Path.of(animalReportPhoto.getFilePath());
+//        try (InputStream is = Files.newInputStream(path);
+//             OutputStream os = response.getOutputStream()
+//        ){
+//            response.setStatus(200);
+//            response.setContentType(animalReportPhoto.getMediaTypeFile());
+//            response.setContentLength(Math.toIntExact(animalReportPhoto.getFileSize()));
+//            is.transferTo(os);
+//        }
+//    }
 }

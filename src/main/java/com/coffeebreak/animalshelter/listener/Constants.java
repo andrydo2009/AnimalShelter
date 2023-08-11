@@ -307,10 +307,11 @@ public final class Constants {
             4.Алеся Кошкина г.Москва тел.+7999888776655
             """;
 
-    static final String REGEX_MESSAGE = """
+    static final String REGEX_MESSAGE_REPORT = """
             (Рацион:)(\\s)(\\W+)(;)\s
             (Самочувствие:)(\\s)(\\W+)(;)
             (Поведение:)(\\s)(\\W+)(;)""";
 
     static final Long TELEGRAM_CHAT_VOLUNTEERS = -844733515L;
+
 }
