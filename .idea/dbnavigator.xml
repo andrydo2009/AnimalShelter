@@ -20,11 +20,14 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="50a4ce24-0069-41ad-91f0-3598939b1918" object-ref="schemas/public/tables/animal_report_data" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="50a4ce24-0069-41ad-91f0-3598939b1918" dataset="public.animal_report_data" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="50a4ce24-0069-41ad-91f0-3598939b1918" dataset="public.cat" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="50a4ce24-0069-41ad-91f0-3598939b1918" dataset="public.dog" active-filter-id="" />
     <filter-actions connection-id="50a4ce24-0069-41ad-91f0-3598939b1918" dataset="public.cat_owner" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="50a4ce24-0069-41ad-91f0-3598939b1918" dataset="public.animal_report_photo" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="50a4ce24-0069-41ad-91f0-3598939b1918" dataset="public.dog_owner" active-filter-id="EMPTY_FILTER" />
