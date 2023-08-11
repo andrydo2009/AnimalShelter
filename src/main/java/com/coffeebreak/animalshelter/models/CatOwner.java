@@ -19,9 +19,17 @@ public class CatOwner {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // контактный номер телефона хозяина животного
 
+    private Long chatId;
+
     private OwnershipStatus status;
 
     public CatOwner() {
+    }
+
+    public CatOwner(Long chatId, String fullName, String phoneNumber) {
+        this.chatId = chatId;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
     }
 
     public CatOwner(String fullName, Integer age, String address, String phoneNumber) {
@@ -29,6 +37,15 @@ public class CatOwner {
         this.age = age;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    public CatOwner(Long id, String fullName, Integer age, String address, String phoneNumber, Long chatId) {
+        this.id = id;
+        this.fullName = fullName;
+        this.age = age;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.chatId = chatId;
     }
 
     public CatOwner(Long id, String fullName, Integer age, String address, String phoneNumber) {
@@ -75,6 +92,14 @@ public class CatOwner {
         return phoneNumber;
     }
 
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
+    }
+
     public OwnershipStatus getStatus() {
         return status;
     }
@@ -92,12 +117,12 @@ public class CatOwner {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CatOwner catOwner = (CatOwner) o;
-        return Objects.equals(id, catOwner.id) && Objects.equals(fullName, catOwner.fullName) && Objects.equals(age, catOwner.age) && Objects.equals(address, catOwner.address) && Objects.equals(phoneNumber, catOwner.phoneNumber) && status == catOwner.status;
+        return Objects.equals(id, catOwner.id) && Objects.equals(fullName, catOwner.fullName) && Objects.equals(age, catOwner.age) && Objects.equals(address, catOwner.address) && Objects.equals(phoneNumber, catOwner.phoneNumber) && Objects.equals(chatId, catOwner.chatId) && status == catOwner.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullName, age, address, phoneNumber, status);
+        return Objects.hash(id, fullName, age, address, phoneNumber, chatId, status);
     }
 
     @Override
@@ -108,6 +133,7 @@ public class CatOwner {
                 ", age=" + age +
                 ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", chatId=" + chatId +
                 ", status=" + status +
                 '}';
     }
