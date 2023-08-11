@@ -41,7 +41,7 @@ public class AnimalShelterKeyboard {
 
     public void sendMenuInformationAboutShelter(Long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Информация о приюте"));
+                new KeyboardButton("Информация о приюте"), new KeyboardButton("Оставить контактные данные").requestContact(true));
 //                , new KeyboardButton("Оставить контактные данные").requestContact(true));
         replyKeyboardMarkup.addRow(new KeyboardButton("Расписание"), new KeyboardButton("Оформление пропуска"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Техника безопасности"), new KeyboardButton("Позвать волонтёра"));

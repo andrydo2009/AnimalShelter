@@ -56,6 +56,9 @@ public class CatOwner {
         this.phoneNumber = phoneNumber;
     }
 
+    public CatOwner(Long finalChatId, String firstName, String phone, String address) {
+    }
+
     public Long getId() {
         return id;
     }

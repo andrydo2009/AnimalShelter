@@ -326,8 +326,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             String lastName = update.message().contact().lastName();
             String phone = update.message().contact().phoneNumber();
             String username = update.message().chat().username();
-            // по-моему это не не то, что нужно
-//            String address = update.message().chat().location().address();
+            // по-моему это не то что нужно
+            String address = update.message().chat().location().address();
             Long finalChatId = update.message().chat().id();
             var sortChatId = dogOwnerRepository.findAll().stream()
                     .filter(i -> Objects.equals(i.getChatId(),finalChatId))
@@ -343,17 +343,17 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             if (lastName != null) {
                 String name = firstName + " " + lastName + " " + username;
                 if(isCat){
-                    catOwnerRepository.save(new CatOwner(finalChatId, name, phone));
+                    catOwnerRepository.save(new CatOwner(finalChatId, name, phone,address));
                 } else {
-                    dogOwnerRepository.save(new DogOwner(finalChatId, name, phone));
+                    dogOwnerRepository.save(new DogOwner(finalChatId, name, phone,address));
                 }
                 sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
                 return;
             }
             if (isCat) {
-                catOwnerRepository.save(new CatOwner(finalChatId, firstName, phone));
+                catOwnerRepository.save(new CatOwner(finalChatId, firstName, phone,address));
             } else {
-                dogOwnerRepository.save(new DogOwner(finalChatId, firstName, phone));
+                dogOwnerRepository.save(new DogOwner(finalChatId, firstName, phone,address));
             }
             sendMessage(finalChatId, "Вас успешно добавили в базу! Скоро вам перезвонят.");
             // Сообщение в чат волонтерам

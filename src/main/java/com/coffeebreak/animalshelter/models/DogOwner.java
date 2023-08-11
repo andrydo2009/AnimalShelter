@@ -56,6 +56,9 @@ public class DogOwner {
         this.phoneNumber = phoneNumber;
     }
 
+    public DogOwner(Long finalChatId, String firstName, String phone, String address) {
+    }
+
     public Long getId() {
         return id;
     }
