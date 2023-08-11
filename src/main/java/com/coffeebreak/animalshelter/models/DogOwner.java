@@ -19,6 +19,8 @@ public class DogOwner {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // контактный номер телефона хозяина животного
 
+    private OwnershipStatus status;
+
     public DogOwner() {
     }
 
@@ -77,17 +79,25 @@ public class DogOwner {
         this.phoneNumber = phoneNumber;
     }
 
+    public OwnershipStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OwnershipStatus status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DogOwner dogOwner = (DogOwner) o;
-        return Objects.equals(id, dogOwner.id) && Objects.equals(fullName, dogOwner.fullName) && Objects.equals(age, dogOwner.age) && Objects.equals(address, dogOwner.address) && Objects.equals(phoneNumber, dogOwner.phoneNumber);
+        return Objects.equals(id, dogOwner.id) && Objects.equals(fullName, dogOwner.fullName) && Objects.equals(age, dogOwner.age) && Objects.equals(address, dogOwner.address) && Objects.equals(phoneNumber, dogOwner.phoneNumber) && status == dogOwner.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, fullName, age, address, phoneNumber);
+        return Objects.hash(id, fullName, age, address, phoneNumber, status);
     }
 
     @Override
@@ -98,6 +108,7 @@ public class DogOwner {
                 ", age=" + age +
                 ", address='" + address + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", status=" + status +
                 '}';
     }
 }

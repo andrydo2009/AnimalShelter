@@ -313,4 +313,9 @@ public final class Constants {
             (Поведение:)(\\s)(\\W+)(;)""";
 
     static final Long TELEGRAM_CHAT_VOLUNTEERS = -844733515L;
+
+    static final String REGEX_MESSAGE_REPORT = "(Рацион:)(\\s)(\\W+)(;)\n" +
+            "(Самочувствие:)(\\s)(\\W+)(;)\n" +
+            "(Поведение:)(\\s)(\\W+)(;)";
+
 }

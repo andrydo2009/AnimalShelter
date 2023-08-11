@@ -2,25 +2,41 @@ package com.coffeebreak.animalshelter.listener;
 
 
 import com.coffeebreak.animalshelter.keyboards.AnimalShelterKeyboard;
+import com.coffeebreak.animalshelter.models.AnimalReportData;
+import com.coffeebreak.animalshelter.repositories.AnimalReportDataRepository;
+import com.coffeebreak.animalshelter.services.AnimalReportDataService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.File;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.ForwardMessage;
+import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.GetFileResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 import javax.annotation.PostConstruct;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.coffeebreak.animalshelter.listener.Constants.*;
 
 @Component
 public class TelegramBotUpdatesListener implements UpdatesListener {
+
+    @Autowired
+    AnimalReportDataService reportDataService;
+
+    @Autowired
+    AnimalReportDataRepository reportDataRepository;
 
     private final TelegramBot telegramBot;
     private final AnimalShelterKeyboard animalShelterKeyboard;
@@ -30,6 +46,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         this.telegramBot = telegramBot;
         this.animalShelterKeyboard = animalShelterKeyboard;
     }
+
+    private Long daysOfReports;
 
     private boolean isCat = false;
 
@@ -47,8 +65,49 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 Message message = update.message();
                 Long chatId = message.chat().id();
                 String messageText = message.text();
+                Calendar calendar = new GregorianCalendar();
+                daysOfReports = reportDataRepository.findAll().stream()
+                        .filter(s -> s.getChatId().equals(chatId))
+                        .count() + 1;
 
-                switch (messageText) {
+                    long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
+                    Long lastMessageTime = reportDataRepository.findAll().stream()
+                            .filter(s -> Objects.equals(s.getChatId(), chatId))
+                            .map(AnimalReportData::getLastMessageMs)
+                            .max(Long::compare)
+                            .orElseGet(() -> null);
+                    if (lastMessageTime != null) {
+                        Date lastDateSendMessage = new Date(lastMessageTime * 1000);
+                        long numberOfDay = lastDateSendMessage.getDate();
+
+                        if (daysOfReports < 30 ) {
+                            if (compareTime != numberOfDay) {
+                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                                    getReport(update);
+                                }
+                            } else {
+                                if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                                    sendMessage(chatId, "Вы уже отправляли отчет сегодня");
+                                }
+                            }
+                            if (daysOfReports == 31) {
+                                sendMessage(chatId, "Вы прошли испытательный срок!");
+                            }
+                        }
+                    } else {
+                        if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
+                            getReport(update);
+                        }
+                    }
+                    if (update.message() != null && update.message().photo() != null && update.message().caption() == null) {
+                        sendMessage(chatId, "Отчет нужно присылать с описанием!");
+                    }
+
+                    if (update.message() != null && update.message().contact() != null) {
+                    //    getContactOwner(update);
+                    }
+
+               switch (messageText) {
 
                     case START_COMMAND:
                         animalShelterKeyboard.chooseMenu(chatId);
@@ -211,9 +270,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         // Обработка незапланированного сценария
                         sendReplyMessage(chatId, "Неизвестная команда", update.message().messageId());
                         break;
+                        }
                 }
             }
-        }
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 
@@ -235,4 +294,54 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             logger.error("Error during sending message: {}", sendResponse.description());
         }
     }
+
+    public void getReport(Update update) {
+        Pattern pattern = Pattern.compile(REGEX_MESSAGE_REPORT);
+        Matcher matcher = pattern.matcher(update.message().caption());
+        if (matcher.matches()) {
+            String ration = matcher.group(3);
+            String health = matcher.group(7);
+            String habits = matcher.group(11);
+
+            GetFile getFileRequest = new GetFile(update.message().photo()[1].fileId());
+            GetFileResponse getFileResponse = telegramBot.execute(getFileRequest);
+            try {
+                File file = getFileResponse.file();
+                file.fileSize();
+                String fullPathPhoto = file.filePath();
+
+                long timeDate = update.message().date();
+                Date dateSendMessage = new Date(timeDate * 1000);
+                byte[] fileContent = telegramBot.getFileContent(file);
+                reportDataService.uploadTelegramReportData(update.message().chat().id(), fileContent, file,
+                        ration, health, habits, fullPathPhoto, dateSendMessage, timeDate, daysOfReports);
+
+                telegramBot.execute(new SendMessage(update.message().chat().id(), "Отчет успешно принят!"));
+
+                System.out.println("Отчет успешно принят от: " + update.message().chat().id());
+            } catch (IOException e) {
+                System.out.println("Ошибка загрузки фото!");
+            }
+        } else {
+            GetFile getFileRequest = new GetFile(update.message().photo()[1].fileId());
+            GetFileResponse getFileResponse = telegramBot.execute(getFileRequest);
+            try {
+                File file = getFileResponse.file();
+                file.fileSize();
+                String fullPathPhoto = file.filePath();
+
+                long timeDate = update.message().date();
+                Date dateSendMessage = new Date(timeDate * 1000);
+                byte[] fileContent = telegramBot.getFileContent(file);
+                reportDataService.uploadTelegramReportData(update.message().chat().id(), fileContent, file, update.message().caption(),
+                        fullPathPhoto, dateSendMessage, timeDate, daysOfReports);
+
+                telegramBot.execute(new SendMessage(update.message().chat().id(), "Отчет успешно принят!"));
+                System.out.println("Отчет успешно принят от: " + update.message().chat().id());
+            } catch (IOException e) {
+                System.out.println("Ошибка загрузки фото!");
+            }
+        }
+    }
+
 }
