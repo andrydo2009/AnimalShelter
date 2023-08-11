@@ -37,30 +37,30 @@ public class AnimalReportPhotoService {
     }
 
     public void uploadAnimalPhotoReportFile(Long id, MultipartFile file) throws IOException {
-        AnimalReportData reportData = reportDataService.findById(id);
-        Path filePath = Path.of(reportPhotosDir, id + "." +
-                getExtension(Objects.requireNonNull(file.getOriginalFilename())));
-        Files.createDirectories(filePath.getParent());
-        Files.deleteIfExists(filePath);
-        try (InputStream is = file.getInputStream();
-             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-             BufferedInputStream bis = new BufferedInputStream(is, 1024);
-             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
-        ){
-            bis.transferTo(bos);
-        }
-        AnimalReportPhoto animalReportPhoto = reportPhotoRepository.findAnimalReportPhotoByAnimalReportDataId(id).orElse(new AnimalReportPhoto());
-        animalReportPhoto.setAnimalReportData(reportData);
-        animalReportPhoto.setFilePath(filePath.toString());
-        animalReportPhoto.setFileSize(file.getSize());
-        animalReportPhoto.setMediaTypeFile(file.getContentType());
-        animalReportPhoto.setData(generateImageData(filePath));
-        reportPhotoRepository.save(animalReportPhoto);
+//        AnimalReportData reportData = reportDataService.findById(id);
+//        Path filePath = Path.of(reportPhotosDir, id + "." +
+//                getExtension(Objects.requireNonNull(file.getOriginalFilename())));
+//        Files.createDirectories(filePath.getParent());
+//        Files.deleteIfExists(filePath);
+//        try (InputStream is = file.getInputStream();
+//             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+//             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+//             BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+//        ){
+//            bis.transferTo(bos);
+//        }
+//        AnimalReportPhoto animalReportPhoto = reportPhotoRepository.findAnimalReportPhotoByAnimalReportDataId(id).orElse(new AnimalReportPhoto());
+//        animalReportPhoto.setAnimalReportData(reportData);
+//        animalReportPhoto.setFilePath(filePath.toString());
+//        animalReportPhoto.setFileSize(file.getSize());
+//        animalReportPhoto.setMediaTypeFile(file.getContentType());
+//        animalReportPhoto.setData(generateImageData(filePath));
+//        reportPhotoRepository.save(animalReportPhoto);
     }
 
-    public Optional<AnimalReportPhoto> findAnimalReportPhotoByAnimalReportDataId(Long id) {
-        return reportPhotoRepository.findAnimalReportPhotoByAnimalReportDataId(id);
-    }
+//    public Optional<AnimalReportPhoto> findAnimalReportPhotoByAnimalReportDataId(Long id) {
+//        return reportPhotoRepository.findAnimalReportPhotoByAnimalReportDataId(id);
+//    }
 
     private byte[] generateImageData(Path filePath) throws IOException {
         try (InputStream is = Files.newInputStream(filePath);
