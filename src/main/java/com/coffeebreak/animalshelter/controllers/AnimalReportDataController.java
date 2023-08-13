@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ import java.util.Collection;
 @Tag(name = "AnimalReportData", description = "CRUD-операции для работы с отчетами.")
 public class AnimalReportDataController {
 //    @Autowired
-//    private TelegramBotUpdatesListener telegramBotUpdatesListener;
+//    private final TelegramBotUpdatesListener telegramBotUpdatesListener;
 
     private final AnimalReportDataService animalReportDataService;
 
@@ -172,8 +173,8 @@ public class AnimalReportDataController {
                     description = "Отчет о животном не найден"
             )
     })
-    public ResponseEntity<Void> deleteAnimalReportDataById(@PathVariable("animalReportDataId") Long animalReportData) {
-        animalReportDataService.deleteAnimalReportData(animalReportData);
+    public ResponseEntity<Void> deleteAnimalReportDataById(@PathVariable("animalReportDataId") Long animalReportDataId) {
+        animalReportDataService.deleteAnimalReportDataById(animalReportDataId);
         return ResponseEntity.ok().build();
     }
 

@@ -6,11 +6,15 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AnimalShelterKeyboard {
     private final TelegramBot telegramBot;
+
+    private static final Logger logger = LoggerFactory.getLogger(AnimalShelterKeyboard.class);
 
     public AnimalShelterKeyboard(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
@@ -42,7 +46,6 @@ public class AnimalShelterKeyboard {
     public void sendMenuInformationAboutShelter(Long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
                 new KeyboardButton("Информация о приюте"), new KeyboardButton("Оставить контактные данные").requestContact(true));
-//                , new KeyboardButton("Оставить контактные данные").requestContact(true));
         replyKeyboardMarkup.addRow(new KeyboardButton("Расписание"), new KeyboardButton("Оформление пропуска"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Техника безопасности"), new KeyboardButton("Позвать волонтёра"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Вернуться в меню"));
@@ -94,6 +97,8 @@ public class AnimalShelterKeyboard {
         if (!sendResponse.isOk()) {
             int codeError = sendResponse.errorCode();
             String description = sendResponse.description();
+            logger.error("Error code: {}", codeError);
+            logger.error("Error description: {}", description);
         }
     }
 }

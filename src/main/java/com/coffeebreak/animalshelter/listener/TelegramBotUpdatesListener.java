@@ -326,7 +326,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         }
     }
 
-    // в работе
     public void getContactOwner(Update update) {
         if (update.message().contact() != null) {
             String firstName = update.message().contact().firstName();
@@ -372,25 +371,23 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         Matcher matcher = pattern.matcher(update.message().caption());
         if (matcher.matches()) {
             String ration = matcher.group(3);
-            String health = matcher.group(7);
-            String habits = matcher.group(11);
+            String health = matcher.group(6);
+            String habits = matcher.group(9);
 
             GetFile getFileRequest = new GetFile(update.message().photo()[1].fileId());
             GetFileResponse getFileResponse = telegramBot.execute(getFileRequest);
             try {
                 File file = getFileResponse.file();
                 file.fileSize();
-                String fullPathPhoto = file.filePath();
-
-                long timeDate = update.message().date();
-                Date dateSendMessage = new Date(timeDate * 1000);
+                String filePath = file.filePath();
+                long dateTime = update.message().date();
+                Date sendMessageDate = new Date(dateTime * 1000);
                 byte[] fileContent = telegramBot.getFileContent(file);
-                reportDataService.uploadTelegramReportData(update.message().chat().id(), fileContent, file,
-                        ration, health, habits, fullPathPhoto, dateSendMessage, timeDate, daysOfReports);
-
+                reportDataService.uploadTelegramAnimalReportData(update.message().chat().id(), fileContent, file,
+                        ration, health, habits, filePath, sendMessageDate, dateTime, daysOfReports);
                 telegramBot.execute(new SendMessage(update.message().chat().id(), "Отчет успешно принят!"));
-
-                System.out.println("Отчет успешно принят от: " + update.message().chat().id());
+                System.out.println("Отчет успешно принят от пользователя: " + update.message().chat().firstName() +
+                        ", chatId: " + update.message().chat().id());
             } catch (IOException e) {
                 System.out.println("Ошибка загрузки фото!");
             }
@@ -400,16 +397,15 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             try {
                 File file = getFileResponse.file();
                 file.fileSize();
-                String fullPathPhoto = file.filePath();
-
-                long timeDate = update.message().date();
-                Date dateSendMessage = new Date(timeDate * 1000);
+                String filePath = file.filePath();
+                long dateTime = update.message().date();
+                Date sendMessageDate = new Date(dateTime * 1000);
                 byte[] fileContent = telegramBot.getFileContent(file);
-                reportDataService.uploadTelegramReportData(update.message().chat().id(), fileContent, file, update.message().caption(),
-                        fullPathPhoto, dateSendMessage, timeDate, daysOfReports);
-
+                reportDataService.uploadTelegramAnimalReportData(update.message().chat().id(), fileContent, file, update.message().caption(),
+                        filePath, sendMessageDate, dateTime, daysOfReports);
                 telegramBot.execute(new SendMessage(update.message().chat().id(), "Отчет успешно принят!"));
-                System.out.println("Отчет успешно принят от: " + update.message().chat().id());
+                System.out.println("Отчет успешно принят от пользователя: " + update.message().chat().firstName() +
+                        ", chatId: " + update.message().chat().id());
             } catch (IOException e) {
                 System.out.println("Ошибка загрузки фото!");
             }

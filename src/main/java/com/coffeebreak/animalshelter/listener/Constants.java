@@ -308,9 +308,9 @@ public final class Constants {
             """;
 
     static final String REGEX_MESSAGE_REPORT = """
-            (Рацион:)(\\s)(\\W+)(;)\s
-            (Самочувствие:)(\\s)(\\W+)(;)
-            (Поведение:)(\\s)(\\W+)(;)""";
+            ([А-яA-z\\s\\d\\D]+):(\\s)([А-яA-z\\s\\d\\D]+)
+            ([А-яA-z\\s\\d\\D]+):(\\s)([А-яA-z\\s\\d\\D]+)
+            ([А-яA-z\\s\\d\\D]+):(\\s)([А-яA-z\\s\\d\\D]+)""";
 
     static final Long TELEGRAM_CHAT_VOLUNTEERS = -844733515L;
 
