@@ -5,10 +5,13 @@ import com.coffeebreak.animalshelter.keyboards.AnimalShelterKeyboard;
 import com.coffeebreak.animalshelter.models.AnimalReportData;
 import com.coffeebreak.animalshelter.models.CatOwner;
 import com.coffeebreak.animalshelter.models.DogOwner;
+import com.coffeebreak.animalshelter.models.OwnershipStatus;
 import com.coffeebreak.animalshelter.repositories.AnimalReportDataRepository;
 import com.coffeebreak.animalshelter.repositories.CatOwnerRepository;
 import com.coffeebreak.animalshelter.repositories.DogOwnerRepository;
 import com.coffeebreak.animalshelter.services.AnimalReportDataService;
+import com.coffeebreak.animalshelter.services.CatOwnerService;
+import com.coffeebreak.animalshelter.services.DogOwnerService;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.File;
@@ -16,10 +19,8 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.ForwardMessage;
 import com.pengrad.telegrambot.request.GetFile;
-import com.pengrad.telegrambot.request.GetUpdates;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.GetFileResponse;
-import com.pengrad.telegrambot.response.GetUpdatesResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static com.coffeebreak.animalshelter.listener.Constants.*;
 
@@ -49,8 +49,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Autowired
     CatOwnerRepository catOwnerRepository;
 
+    // проверка
+    @Autowired
+    CatOwnerService catOwnerService;
+
     @Autowired
     DogOwnerRepository dogOwnerRepository;
+
+    // проверка
+    @Autowired
+    DogOwnerService dogOwnerService;
 
     private final TelegramBot telegramBot;
     private final AnimalShelterKeyboard animalShelterKeyboard;
@@ -72,7 +80,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-//                GetUpdates getUpdates = new GetUpdates().limit(100).offset(422245773).timeout(0);
+//        GetUpdates getUpdates = new GetUpdates().limit(100).offset(422245882).timeout(0);
 //        GetUpdatesResponse updatesResponse = telegramBot.execute(getUpdates);
 //        List<Update> updates1 = updatesResponse.updates();
 //        for (Update updateClear : updates1) {
@@ -83,7 +91,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 //            }
 //        }
         updates.forEach(update -> {
-//            for (Update update : updates) {
                 if (update.message() != null) {
                     logger.info("Handles update: {}", update);
                     Message message = update.message();
@@ -103,6 +110,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         if (lastMessageTime != null) {
                             Date lastDateSendMessage = new Date(lastMessageTime * 1000);
                             long numberOfDay = lastDateSendMessage.getDate();
+//                            long numberOfDay = lastDateSendMessage.Сalendar.get(Calendar.DAY_OF_MONTH);
 
                             if (daysOfReports < 30) {
                                 if (compareTime != numberOfDay) {
@@ -127,8 +135,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             sendMessage(chatId, "Отчет нужно присылать с описанием!");
                         }
                         if (update.message() != null && update.message().contact() != null) {
-                                getContactOwner(update);
+                            getContactOwner(update);
                         }
+
                         switch (messageText) {
 
                             case START_COMMAND:
@@ -138,13 +147,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             case "Приют для кошек":
                                 isCat = true;
                                 animalShelterKeyboard.sendMenuCatShelter(chatId);
-//                            sendMessage(chatId, "Вы выбрали приют для кошек");
                                 break;
 
                             case "Приют для собак":
                                 isCat = false;
                                 animalShelterKeyboard.sendMenuDogShelter(chatId);
-//                        sendMessage(chatId, "Вы выбрали приют для собак");
                                 break;
 
                             case "Главное меню":
@@ -326,8 +333,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             String lastName = update.message().contact().lastName();
             String phone = update.message().contact().phoneNumber();
             String username = update.message().chat().username();
-            // по-моему это не то что нужно
-            String address = update.message().chat().location().address();
             Long finalChatId = update.message().chat().id();
             var sortChatId = dogOwnerRepository.findAll().stream()
                     .filter(i -> Objects.equals(i.getChatId(),finalChatId))
@@ -343,17 +348,17 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             if (lastName != null) {
                 String name = firstName + " " + lastName + " " + username;
                 if(isCat){
-                    catOwnerRepository.save(new CatOwner(finalChatId, name, phone,address));
+                    catOwnerRepository.save(new CatOwner(finalChatId, name, phone, OwnershipStatus.SEARCH));
                 } else {
-                    dogOwnerRepository.save(new DogOwner(finalChatId, name, phone,address));
+                    dogOwnerRepository.save(new DogOwner(finalChatId, name, phone, OwnershipStatus.SEARCH));
                 }
                 sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
                 return;
             }
             if (isCat) {
-                catOwnerRepository.save(new CatOwner(finalChatId, firstName, phone,address));
+                catOwnerRepository.save(new CatOwner(finalChatId, firstName, phone, OwnershipStatus.SEARCH));
             } else {
-                dogOwnerRepository.save(new DogOwner(finalChatId, firstName, phone,address));
+                dogOwnerRepository.save(new DogOwner(finalChatId, firstName, phone, OwnershipStatus.SEARCH));
             }
             sendMessage(finalChatId, "Вас успешно добавили в базу! Скоро вам перезвонят.");
             // Сообщение в чат волонтерам
@@ -411,11 +416,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         }
     }
 
-
     @Scheduled(cron = "* 30 21 * * *")
     public void checkResults() {
         if (daysOfReports < 30) {
-            var twoDay = 172800000;
+            var twoDay = 172800000; // секунды в двух днях
             var nowTime = new Date().getTime() - twoDay;
             var getDistinct = this.reportDataRepository.findAll().stream()
                     .sorted(Comparator

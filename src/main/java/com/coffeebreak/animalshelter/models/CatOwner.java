@@ -14,7 +14,7 @@ public class CatOwner {
     private String fullName; // полное имя хозяина животного
     @Column(name = "age")
     private Integer age; // возраст хозяина животного
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     private String address; // адрес хозяина животного
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber; // контактный номер телефона хозяина животного
@@ -26,10 +26,27 @@ public class CatOwner {
     public CatOwner() {
     }
 
+    // добавил
     public CatOwner(Long chatId, String fullName, String phoneNumber) {
         this.chatId = chatId;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
+    }
+
+    // добавил
+    public CatOwner(Long chatId, String fullName, String phoneNumber, OwnershipStatus status) {
+        this.chatId = chatId;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.status = status;
+    }
+
+    // добавил
+    public CatOwner(Long chatId, String fullName, String phoneNumber, String address) {
+        this.chatId = chatId;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
     }
 
     public CatOwner(String fullName, Integer age, String address, String phoneNumber) {
@@ -54,9 +71,6 @@ public class CatOwner {
         this.age = age;
         this.address = address;
         this.phoneNumber = phoneNumber;
-    }
-
-    public CatOwner(Long finalChatId, String firstName, String phone, String address) {
     }
 
     public Long getId() {

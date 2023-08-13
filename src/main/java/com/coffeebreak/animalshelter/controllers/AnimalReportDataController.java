@@ -1,8 +1,7 @@
 package com.coffeebreak.animalshelter.controllers;
 
-import com.coffeebreak.animalshelter.listener.TelegramBotUpdatesListener;
+
 import com.coffeebreak.animalshelter.models.AnimalReportData;
-import com.coffeebreak.animalshelter.models.AnimalReportPhoto;
 import com.coffeebreak.animalshelter.repositories.AnimalReportPhotoRepository;
 import com.coffeebreak.animalshelter.services.AnimalReportDataService;
 import com.coffeebreak.animalshelter.services.AnimalReportPhotoService;
@@ -15,20 +14,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
 
 /**
@@ -40,8 +31,8 @@ import java.util.Collection;
 @RequestMapping("/report")
 @Tag(name = "AnimalReportData", description = "CRUD-операции для работы с отчетами.")
 public class AnimalReportDataController {
-    @Autowired
-    private TelegramBotUpdatesListener telegramBotUpdatesListener;
+//    @Autowired
+//    private TelegramBotUpdatesListener telegramBotUpdatesListener;
 
     private final AnimalReportDataService animalReportDataService;
 
