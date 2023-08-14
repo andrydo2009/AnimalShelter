@@ -92,15 +92,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             .count() + 1;
                     try {
                         long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
-                        Long lastMessageTime = reportDataRepository.findAll().stream()
+                        Long lastMessageTimeMs = reportDataRepository.findAll().stream()
                                 .filter(s -> Objects.equals(s.getChatId(), chatId))
                                 .map(AnimalReportData::getLastMessageMs)
                                 .max(Long::compare)
                                 .orElse(null);
-                        if (lastMessageTime != null) {
-                            Date lastDateSendMessage = new Date(lastMessageTime * 1000);
+                        if (lastMessageTimeMs != null) {
+                            Date lastDateSendMessage = new Date(lastMessageTimeMs * 1000); // получаем количество секунд последнего отправленного сообщения
                             long numberOfDay = lastDateSendMessage.getDate();
-//                            long numberOfDay = lastDateSendMessage.Сalendar.get(Calendar.DAY_OF_MONTH);
                             if (daysOfReports < 30) {
                                 if (compareTime != numberOfDay) {
                                     if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
@@ -163,6 +162,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             case "Прислать отчет о питомце":
                                 sendMessage(chatId, INFORMATION_ABOUT_REPORT);
                                 sendMessage(chatId, REPORT_EXAMPLE);
+                                break;
+
+                            case "Выбрать кота":
+                                sendMessage(chatId, CHOOSE_CAT_TEXT);
+                                break;
+
+                            case "Выбрать собаку":
+                                sendMessage(chatId, CHOOSE_DOG_TEXT);
                                 break;
 
                             case "Вернуться в меню":
