@@ -105,7 +105,7 @@ public class AnimalReportDataService {
     public void uploadTelegramAnimalReportData(
             Long chatId, byte[] fileContent, File file, String ration, String health, String habits, String filePath,
             Date sendMessageDate, Long dateTime, Long daysOfReports) throws IOException {
-        logger.info("Upload telegram report data method was invoked");
+        logger.info("Upload full telegram report data method was invoked");
         AnimalReportData report = new AnimalReportData();
         report.setChatId(chatId);
         report.setData(fileContent);

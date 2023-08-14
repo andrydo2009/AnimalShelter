@@ -307,11 +307,13 @@ public final class Constants {
             4.Алеся Кошкина г.Москва тел.+7999888776655
             """;
 
+    // регулярное выражение для проверки правильности ввода данных отчета
     static final String REGEX_MESSAGE_REPORT = """
             ([А-яA-z\\s\\d\\D]+):(\\s)([А-яA-z\\s\\d\\D]+)
             ([А-яA-z\\s\\d\\D]+):(\\s)([А-яA-z\\s\\d\\D]+)
             ([А-яA-z\\s\\d\\D]+):(\\s)([А-яA-z\\s\\d\\D]+)""";
 
-    static final Long TELEGRAM_CHAT_VOLUNTEERS = -844733515L;
+    // chatId добровольца
+    static final Long TELEGRAM_CHAT_VOLUNTEERS = -8447335152L;
 
 }

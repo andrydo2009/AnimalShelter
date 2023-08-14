@@ -135,7 +135,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             sendMessage(chatId, "Отчет нужно присылать с описанием!");
                         }
                         if (update.message() != null && update.message().contact() != null) {
-                            getContactOwner(update);
+                            getOwnerContactData(update);
                         }
 
                         switch (messageText) {
@@ -254,10 +254,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 sendMessage(chatId, INFORMATION_WE_DO_NOT_GIVE_OUT_PETS);
                                 break;
 
-                            case "Позвать волонтёра":
-                                sendMessage(chatId, "Я передал ваше сообщение волонтёру, он скоро с вами свяжется. " +
-                                        "Если у вас закрытый профиль - поделитесь контактом. " +
-                                        "Нажмите справа сверху на  - \"отправить контактные данные\" и волонтёр вам перезвонит");
+                            case "Позвать добровольца":
+                                sendMessage(chatId, "Я передал ваше сообщение добровольцу, он скоро с вами свяжется.");
                                 sendForwardMessage(chatId, update.message().messageId());
                                 break;
 
@@ -290,7 +288,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 break;
 
                             case "":
-                                System.out.println("Так нельзя");
+                                System.out.println("Введено пустое сообщение");
                                 sendMessage(chatId, "Пустое сообщение");
                                 break;
 
@@ -308,25 +306,32 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     public void sendReplyMessage(Long chatId, String messageText, Integer messageId) {
+        logger.info("Send reply message method was invoked");
         SendMessage sendMessage = new SendMessage(chatId, messageText);
         sendMessage.replyToMessageId(messageId);
         telegramBot.execute(sendMessage);
+        logger.info("Reply message was sent successfully");
     }
 
     public void sendForwardMessage(Long chatId, Integer messageId) {
+        logger.info("Send forward message method was invoked");
         ForwardMessage forwardMessage = new ForwardMessage(TELEGRAM_CHAT_VOLUNTEERS, chatId, messageId);
         telegramBot.execute(forwardMessage);
+        logger.info("Forward message was sent successfully");
     }
 
     public void sendMessage(Long chatId, String message) {
+        logger.info("Send message method was invoked");
         SendMessage sendMessage = new SendMessage(chatId, message);
         SendResponse sendResponse = telegramBot.execute(sendMessage);
+        logger.info("Message was sent successfully");
         if (!sendResponse.isOk()) {
             logger.error("Error during sending message: {}", sendResponse.description());
         }
     }
 
-    public void getContactOwner(Update update) {
+    public void getOwnerContactData(Update update) {
+        logger.info("Get owner contact data method was invoked");
         if (update.message().contact() != null) {
             String firstName = update.message().contact().firstName();
             String lastName = update.message().contact().lastName();
@@ -339,9 +344,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             var sortChatIdCat = catOwnerRepository.findAll().stream()
                     .filter(i -> Objects.equals(i.getChatId(),finalChatId))
                     .toList();
-
             if (!sortChatId.isEmpty() || !sortChatIdCat.isEmpty()) {
                 sendMessage(finalChatId, "Вы уже в базе!");
+                logger.info("Owner contact data already in database");
                 return;
             }
             if (lastName != null) {
@@ -351,7 +356,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 } else {
                     dogOwnerRepository.save(new DogOwner(finalChatId, name, phone, OwnershipStatus.SEARCH));
                 }
-                sendMessage(finalChatId, "Вас успешно добавили в базу. Скоро вам перезвонят.");
+                sendMessage(finalChatId, "Вас успешно добавили в базу! Скоро вам перезвонят.");
+                logger.info("Owner contact data with last name was registered successfully");
                 return;
             }
             if (isCat) {
@@ -360,23 +366,25 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 dogOwnerRepository.save(new DogOwner(finalChatId, firstName, phone, OwnershipStatus.SEARCH));
             }
             sendMessage(finalChatId, "Вас успешно добавили в базу! Скоро вам перезвонят.");
-            // Сообщение в чат волонтерам
+            logger.info("Owner contact data was registered successfully");
+            // Сообщение в чат добровольцам
             sendMessage(TELEGRAM_CHAT_VOLUNTEERS, firstName + " " + phone + " Добавил(а) свой номер в базу");
             sendForwardMessage(finalChatId, update.message().messageId());
         }
     }
 
     public void getReport(Update update) {
+        logger.info("Get report method was invoked");
         Pattern pattern = Pattern.compile(REGEX_MESSAGE_REPORT);
         Matcher matcher = pattern.matcher(update.message().caption());
         if (matcher.matches()) {
             String ration = matcher.group(3);
             String health = matcher.group(6);
             String habits = matcher.group(9);
-
             GetFile getFileRequest = new GetFile(update.message().photo()[1].fileId());
             GetFileResponse getFileResponse = telegramBot.execute(getFileRequest);
             try {
+                logger.info("Full report method was invoked");
                 File file = getFileResponse.file();
                 file.fileSize();
                 String filePath = file.filePath();
@@ -386,15 +394,17 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 reportDataService.uploadTelegramAnimalReportData(update.message().chat().id(), fileContent, file,
                         ration, health, habits, filePath, sendMessageDate, dateTime, daysOfReports);
                 telegramBot.execute(new SendMessage(update.message().chat().id(), "Отчет успешно принят!"));
-                System.out.println("Отчет успешно принят от пользователя: " + update.message().chat().firstName() +
-                        ", chatId: " + update.message().chat().id());
+                logger.info("Full report accepted from user: {} with chat id {}", update.message().chat().firstName(),
+                        update.message().chat().id());
             } catch (IOException e) {
                 System.out.println("Ошибка загрузки фото!");
+                logger.error("File content was not uploaded");
             }
         } else {
             GetFile getFileRequest = new GetFile(update.message().photo()[1].fileId());
             GetFileResponse getFileResponse = telegramBot.execute(getFileRequest);
             try {
+                logger.info("Partly report method was invoked");
                 File file = getFileResponse.file();
                 file.fileSize();
                 String filePath = file.filePath();
@@ -404,10 +414,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 reportDataService.uploadTelegramAnimalReportData(update.message().chat().id(), fileContent, file, update.message().caption(),
                         filePath, sendMessageDate, dateTime, daysOfReports);
                 telegramBot.execute(new SendMessage(update.message().chat().id(), "Отчет успешно принят!"));
-                System.out.println("Отчет успешно принят от пользователя: " + update.message().chat().firstName() +
-                        ", chatId: " + update.message().chat().id());
+                logger.info("Partly report accepted from user: {} with chat id {}", update.message().chat().firstName(),
+                        update.message().chat().id());
             } catch (IOException e) {
                 System.out.println("Ошибка загрузки фото!");
+                logger.error("File content was not uploaded");
             }
         }
     }
