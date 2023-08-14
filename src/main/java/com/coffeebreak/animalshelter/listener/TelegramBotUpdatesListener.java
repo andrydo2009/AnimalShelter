@@ -92,15 +92,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             .count() + 1;
                     try {
                         long compareTime = calendar.get(Calendar.DAY_OF_MONTH);
-                        Long lastMessageTime = reportDataRepository.findAll().stream()
+                        Long lastMessageTimeMs = reportDataRepository.findAll().stream()
                                 .filter(s -> Objects.equals(s.getChatId(), chatId))
                                 .map(AnimalReportData::getLastMessageMs)
                                 .max(Long::compare)
                                 .orElse(null);
-                        if (lastMessageTime != null) {
-                            Date lastDateSendMessage = new Date(lastMessageTime * 1000);
+                        if (lastMessageTimeMs != null) {
+                            Date lastDateSendMessage = new Date(lastMessageTimeMs * 1000); // получаем количество секунд последнего отправленного сообщения
                             long numberOfDay = lastDateSendMessage.getDate();
-//                            long numberOfDay = lastDateSendMessage.Сalendar.get(Calendar.DAY_OF_MONTH);
                             if (daysOfReports < 30) {
                                 if (compareTime != numberOfDay) {
                                     if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
