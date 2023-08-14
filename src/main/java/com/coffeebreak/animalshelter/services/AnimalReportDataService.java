@@ -102,7 +102,7 @@ public class AnimalReportDataService {
      * @throws IOException может возникнуть если при загрузке отчета что-то пошло не так
      * @see AnimalReportDataService
      */
-    public void uploadTelegramAnimalReportData(
+    public void uploadFullTelegramAnimalReportData(
             Long chatId, byte[] fileContent, File file, String ration, String health, String habits, String filePath,
             Date sendMessageDate, Long dateTime, Long daysOfReports) throws IOException {
         logger.info("Upload full telegram report data method was invoked");

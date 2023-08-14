@@ -176,19 +176,19 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                             case "Расписание":
                                 if (isCat) {
-                                    sendMessage(chatId, SCHEDULE_ABOUT_CAT_SHELTER);
+                                    sendMessage(chatId, CAT_SHELTER_WORKING_HOURS);
                                     break;
                                 } else {
-                                    sendMessage(chatId, SCHEDULE_ABOUT_DOG_SHELTER);
+                                    sendMessage(chatId, DOG_SHELTER_WORKING_HOURS);
                                     break;
                                 }
 
                             case "Оформление пропуска":
                                 if (isCat) {
-                                    sendMessage(chatId, REGISTRATION_OF_PASS_ABOUT_CAT_SHELTER);
+                                    sendMessage(chatId, CAT_SHELTER_REGISTRATION_OF_PASS);
                                     break;
                                 } else {
-                                    sendMessage(chatId, REGISTRATION_OF_PASS_ABOUT_DOG_SHELTER);
+                                    sendMessage(chatId, DOG_SHELTER_REGISTRATION_OF_PASS);
                                     break;
                                 }
 
@@ -220,27 +220,27 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                             case "Рекомендации к транспортировке":
                                 if (isCat) {
-                                    sendMessage(chatId, RECOMMENDATIONS_FOR_TRANSPORTATION_CAT);
+                                    sendMessage(chatId, RECOMMENDATIONS_FOR_CAT_TRANSPORTATION);
                                     break;
                                 } else {
-                                    sendMessage(chatId, RECOMMENDATIONS_FOR_TRANSPORTATION_DOG);
+                                    sendMessage(chatId, RECOMMENDATIONS_FOR_DOG_TRANSPORTATION);
                                     break;
                                 }
 
                             case "Обустройство жилья котёнка":
-                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_KITTEN);
+                                sendMessage(chatId, HOUSE_ARRANGEMENT_FOR_A_KITTEN);
                                 break;
 
                             case "Обустройство жилья взрослого кота":
-                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_ADULT_CAT);
+                                sendMessage(chatId, HOUSE_ARRANGEMENT_FOR_AN_ADULT_CAT);
                                 break;
 
                             case "Обустройство жилья кота с инвалидностью":
-                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_CAT_WITH_A_DISABILITY);
+                                sendMessage(chatId, HOUSE_ARRANGEMENT_FOR_DISABLED_CAT);
                                 break;
 
                             case "Причины по которым можем не выдать питомца":
-                                sendMessage(chatId, INFORMATION_WE_DO_NOT_GIVE_OUT_PETS);
+                                sendMessage(chatId, REFUSAL_REASONS);
                                 break;
 
                             case "Позвать добровольца":
@@ -257,23 +257,23 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 break;
 
                             case "Обустройство жилья щенка":
-                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_PUPPY);
+                                sendMessage(chatId, HOUSE_ARRANGEMENT_FOR_A_PUPPY);
                                 break;
 
                             case "Обустройство жилья взрослой собаки":
-                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_DOG);
+                                sendMessage(chatId, HOUSE_ARRANGEMENT_FOR_AN_ADULT_DOG);
                                 break;
 
                             case "Обустройство жилья собаки с инвалидностью":
-                                sendMessage(chatId, ARRANGEMENT_OF_OF_HOUSING_FOR_A_DOG_WITH_A_DISABILITY);
+                                sendMessage(chatId, HOUSE_ARRANGEMENT_FOR_DISABLED_DOG);
                                 break;
 
                             case "Советы кинолога":
-                                sendMessage(chatId, TIPS_FROM_A_DOG_HANDLER);
+                                sendMessage(chatId, DOG_HANDLER_TIPS);
                                 break;
 
                             case "Контакты проверенных кинологов":
-                                sendMessage(chatId, CONTACTS_OF_THE_DOG_HANDLER);
+                                sendMessage(chatId, DOG_HANDLERS_CONTACT_DATA);
                                 break;
 
                             case "":
@@ -303,7 +303,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     public void sendForwardMessage(Long chatId, Integer messageId) {
         logger.info("Send forward message method was invoked");
-        ForwardMessage forwardMessage = new ForwardMessage(TELEGRAM_CHAT_VOLUNTEERS, chatId, messageId);
+        ForwardMessage forwardMessage = new ForwardMessage(TELEGRAM_CHAT_VOLUNTEER, chatId, messageId);
         telegramBot.execute(forwardMessage);
         logger.info("Forward message was sent successfully");
     }
@@ -356,7 +356,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             sendMessage(finalChatId, "Вас успешно добавили в базу! Скоро вам перезвонят.");
             logger.info("Owner contact data was registered successfully");
             // Сообщение в чат добровольцам
-            sendMessage(TELEGRAM_CHAT_VOLUNTEERS, firstName + " " + phone + " Добавил(а) свой номер в базу");
+            sendMessage(TELEGRAM_CHAT_VOLUNTEER, firstName + " " + phone + " Добавил(а) свой номер в базу");
             sendForwardMessage(finalChatId, update.message().messageId());
         }
     }
@@ -379,7 +379,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 long dateTime = update.message().date();
                 Date sendMessageDate = new Date(dateTime * 1000);
                 byte[] fileContent = telegramBot.getFileContent(file);
-                reportDataService.uploadTelegramAnimalReportData(update.message().chat().id(), fileContent, file,
+                reportDataService.uploadFullTelegramAnimalReportData(update.message().chat().id(), fileContent, file,
                         ration, health, habits, filePath, sendMessageDate, dateTime, daysOfReports);
                 telegramBot.execute(new SendMessage(update.message().chat().id(), "Отчет успешно принят!"));
                 logger.info("Full report accepted from user: {} with chat id {}", update.message().chat().firstName(),
