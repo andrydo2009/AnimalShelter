@@ -379,7 +379,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 long dateTime = update.message().date();
                 Date sendMessageDate = new Date(dateTime * 1000);
                 byte[] fileContent = telegramBot.getFileContent(file);
-                reportDataService.uploadTelegramAnimalReportData(update.message().chat().id(), fileContent, file,
+                reportDataService.uploadFullTelegramAnimalReportData(update.message().chat().id(), fileContent, file,
                         ration, health, habits, filePath, sendMessageDate, dateTime, daysOfReports);
                 telegramBot.execute(new SendMessage(update.message().chat().id(), "Отчет успешно принят!"));
                 logger.info("Full report accepted from user: {} with chat id {}", update.message().chat().firstName(),
