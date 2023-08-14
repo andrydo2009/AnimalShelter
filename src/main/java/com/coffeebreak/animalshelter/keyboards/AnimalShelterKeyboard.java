@@ -89,7 +89,7 @@ public class AnimalShelterKeyboard {
                 new KeyboardButton("Причины по которым можем не выдать питомца"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Советы кинолога"),
                 new KeyboardButton("Контакты проверенных кинологов"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать добровольцаа"),
+        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать добровольца"),
                 new KeyboardButton("Вернуться в меню"));
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Мы очень рады что вы хотите завести нового друга. Выберите что вас интересует:");
         logger.info("Send menu how to take dog method was executed successfully");
