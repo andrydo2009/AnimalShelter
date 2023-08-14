@@ -80,16 +80,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-//        GetUpdates getUpdates = new GetUpdates().limit(100).offset(422245882).timeout(0);
-//        GetUpdatesResponse updatesResponse = telegramBot.execute(getUpdates);
-//        List<Update> updates1 = updatesResponse.updates();
-//        for (Update updateClear : updates1) {
-//            if (updateClear.message() != null) {
-//                Message message1 = updateClear.message();
-//                Long chatId = message1.chat().id();
-//                String messageTxt = message1.text();
-//            }
-//        }
         updates.forEach(update -> {
                 if (update.message() != null) {
                     logger.info("Handles update: {}", update);
@@ -111,7 +101,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             Date lastDateSendMessage = new Date(lastMessageTime * 1000);
                             long numberOfDay = lastDateSendMessage.getDate();
 //                            long numberOfDay = lastDateSendMessage.Сalendar.get(Calendar.DAY_OF_MONTH);
-
                             if (daysOfReports < 30) {
                                 if (compareTime != numberOfDay) {
                                     if (update.message() != null && update.message().photo() != null && update.message().caption() != null) {
@@ -293,7 +282,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 break;
 
                             default:
-                                // Обработка незапланированного сценария
                                 sendReplyMessage(chatId, "Неизвестная команда", update.message().messageId());
                                 break;
                         }
@@ -435,7 +423,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             .comparing(AnimalReportData::getLastMessageMs));
             getDistinct.stream()
                     .filter(i -> i.getLastMessageMs() * 1000 < nowTime)
-                    .forEach(s -> sendMessage(s.getChatId(), "Вы забыли прислать отчет, скорее поторопитесь сделать это!"));
+                    .forEach(s -> sendMessage(s.getChatId(), "Вы забыли прислать отчет, пришлите его как можно скорее!"));
         }
     }
 }
