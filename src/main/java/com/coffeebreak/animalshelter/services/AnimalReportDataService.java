@@ -5,6 +5,8 @@ import com.coffeebreak.animalshelter.exceptions.AnimalReportDataNotFoundExceptio
 import com.coffeebreak.animalshelter.models.AnimalReportData;
 import com.coffeebreak.animalshelter.repositories.AnimalReportDataRepository;
 import com.pengrad.telegrambot.model.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,6 +16,8 @@ import java.util.Date;
 @Service
 public class AnimalReportDataService {
     private final AnimalReportDataRepository animalReportDataRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(AnimalReportDataService.class);
 
     public AnimalReportDataService(AnimalReportDataRepository animalReportDataRepository) {
         this.animalReportDataRepository = animalReportDataRepository;
@@ -27,19 +31,25 @@ public class AnimalReportDataService {
      * @return созданный объект класса AnimalReportData
      */
     public AnimalReportData createAnimalReportData(AnimalReportData animalReportData) {
-        return animalReportDataRepository.save(animalReportData);
+        logger.info("Create animal report data method was invoked");
+        animalReportDataRepository.save(animalReportData);
+        logger.info("Animal report data {} was created successfully", animalReportData);
+        return animalReportData;
     }
 
     /**
      * Поиск объекта класса AnimalReportData по его идентификатору
      * <br>
      * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findById(Object)}
-     * @param id идентификатор искомого объекта класса AnimalReportData, не может быть null
+     * @param animalReportDataId идентификатор искомого объекта класса AnimalReportData, не может быть null
      * @return найденный объект класса AnimalReportData
      * @throws AnimalReportDataNotFoundException если объект класса AnimalReportData не был найден в БД
      */
-    public AnimalReportData findById(Long id) {
-        return animalReportDataRepository.findById(id).orElseThrow(AnimalReportDataNotFoundException::new);
+    public AnimalReportData findAnimalReportDataById(Long animalReportDataId) {
+        logger.info("Find animal report data by id = {} method was invoked", animalReportDataId);
+        AnimalReportData animalReportData = animalReportDataRepository.findById(animalReportDataId).orElseThrow(AnimalReportDataNotFoundException::new);
+        logger.info("Animal report data with id = {} was successfully found", animalReportDataId);
+        return animalReportData;
     }
 
     /**
@@ -49,7 +59,10 @@ public class AnimalReportDataService {
      * @return коллекция объектов класса AnimalReportData
      */
     public Collection<AnimalReportData> findAllAnimalReport() {
-        return animalReportDataRepository.findAll();
+        logger.info("Find all animal report data method was invoked");
+        Collection<AnimalReportData> animalReportData = animalReportDataRepository.findAll();
+        logger.info("All animal report data were successfully found");
+        return animalReportData;
     }
 
     /**
@@ -61,9 +74,12 @@ public class AnimalReportDataService {
      * @throws AnimalReportDataNotFoundException если объект класса AnimalReportData не был найден в БД
      */
     public AnimalReportData updateAnimalReportData(AnimalReportData animalReportData) {
+        logger.info("Update animal report data: {} method was invoked", animalReportData);
         if (animalReportData.getId() != null) {
-            if (findById(animalReportData.getId()) != null) {
-                return animalReportDataRepository.save (animalReportData);
+            if (findAnimalReportDataById(animalReportData.getId()) != null) {
+                animalReportDataRepository.save(animalReportData);
+                logger.info("Animal report data {} was updated successfully", animalReportData);
+                return animalReportData;
             }
         }
         throw new AnimalReportDataNotFoundException();
@@ -73,45 +89,55 @@ public class AnimalReportDataService {
      * Удаление объекта класса AnimalReportData по его идентификатору
      * <br>
      * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#deleteById(Object)}
-     * @param id идентификатор искомого объекта класса AnimalReportData, не может быть null
+     * @param animalReportDataId идентификатор искомого объекта класса AnimalReportData, не может быть null
      */
-    public void deleteAnimalReportData(Long id) {
-        animalReportDataRepository.deleteById (id);
+    public void deleteAnimalReportDataById(Long animalReportDataId) {
+        logger.info("Delete animal report data by id = {} method was invoked", animalReportDataId);
+        animalReportDataRepository.deleteById(animalReportDataId);
+        logger.info("Animal report data with id = {} was deleted successfully", animalReportDataId);
     }
 
-    public void uploadTelegramReportData(Long personId, byte[] pictureFile, File file, String ration, String health,
-                                 String habits, String filePath, Date dateSendMessage, Long timeDate, Long daysOfReports) throws IOException {
-
-
+    /**
+     * Метод загрузки отчета о животном.
+     * @throws IOException может возникнуть если при загрузке отчета что-то пошло не так
+     * @see AnimalReportDataService
+     */
+    public void uploadTelegramAnimalReportData(
+            Long chatId, byte[] fileContent, File file, String ration, String health, String habits, String filePath,
+            Date sendMessageDate, Long dateTime, Long daysOfReports) throws IOException {
+        logger.info("Upload full telegram report data method was invoked");
         AnimalReportData report = new AnimalReportData();
-
-        report.setLastMessage(dateSendMessage);
-        report.setDaysOfOwnership(daysOfReports);
-        report.setFilePath(filePath);
+        report.setChatId(chatId);
+        report.setData(fileContent);
         report.setFileSize(file.fileSize());
-        report.setLastMessageMs(timeDate);
-        report.setChatId(personId);
-        report.setData(pictureFile);
         report.setRationOfAnimal(ration);
         report.setHealthOfAnimal(health);
         report.setHabitsOfAnimal(habits);
-        this.animalReportDataRepository.save(report);
+        report.setFilePath(filePath);
+        report.setLastMessage(sendMessageDate);
+        report.setLastMessageMs(dateTime);
+        report.setDaysOfOwnership(daysOfReports);
+        animalReportDataRepository.save(report);
     }
 
-
-    public void uploadTelegramReportData(Long personId, byte[] pictureFile, File file,
-                                 String caption, String filePath, Date dateSendMessage, Long timeDate, Long daysOfReports) throws IOException {
-
-
-        AnimalReportData report = new AnimalReportData();//findById(ownerId);
-        report.setLastMessage(dateSendMessage);
-        report.setDaysOfOwnership(daysOfReports);
-        report.setFilePath(filePath);
-        report.setChatId(personId);
+    /**
+     * Метод загрузки отчета о животном.
+     * @throws IOException может возникнуть если при загрузке отчета что-то пошло не так
+     * @see AnimalReportDataService
+     */
+    public void uploadTelegramAnimalReportData(
+            Long chatId, byte[] fileContent, File file, String caption, String filePath, Date sendMessageDate,
+            Long dateTime, Long daysOfReports) throws IOException {
+        logger.info("Upload telegram report data method was invoked");
+        AnimalReportData report = new AnimalReportData();
+        report.setChatId(chatId);
+        report.setData(fileContent);
         report.setFileSize(file.fileSize());
-        report.setData(pictureFile);
         report.setCaption(caption);
-        report.setLastMessageMs(timeDate);
-        this.animalReportDataRepository.save(report);
+        report.setFilePath(filePath);
+        report.setLastMessage(sendMessageDate);
+        report.setLastMessageMs(dateTime);
+        report.setDaysOfOwnership(daysOfReports);
+        animalReportDataRepository.save(report);
     }
 }

@@ -172,8 +172,8 @@ public class AnimalReportDataController {
                     description = "Отчет о животном не найден"
             )
     })
-    public ResponseEntity<Void> deleteAnimalReportDataById(@PathVariable("animalReportDataId") Long animalReportData) {
-        animalReportDataService.deleteAnimalReportData(animalReportData);
+    public ResponseEntity<Void> deleteAnimalReportDataById(@PathVariable("animalReportDataId") Long animalReportDataId) {
+        animalReportDataService.deleteAnimalReportDataById(animalReportDataId);
         return ResponseEntity.ok().build();
     }
 

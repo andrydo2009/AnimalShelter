@@ -63,8 +63,6 @@ public class AnimalReportData {
         this.data = data;
     }
 
-
-
     public Long getId() {
         return id;
     }

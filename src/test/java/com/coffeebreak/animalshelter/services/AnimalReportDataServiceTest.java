@@ -86,7 +86,7 @@ class AnimalReportDataServiceTest {
         when(animalReportDataRepository.findById(anyLong())).thenReturn(Optional.of(reportTestOne));
 
         // Выполняем метод findById
-        AnimalReportData result = animalReportDataService.findById(1L);
+        AnimalReportData result = animalReportDataService.findAnimalReportDataById(1L);
 
         // Проверяем, что возвращенный объект не равен null и имеет ожидаемые значения полей
         Assertions.assertNotNull(result);
@@ -153,7 +153,7 @@ class AnimalReportDataServiceTest {
         AnimalReportData result = animalReportDataService.createAnimalReportData(reportTestOne);
 
         // Выполняем метод deleteAnimalReportData
-        animalReportDataService.deleteAnimalReportData(result.getId());
+        animalReportDataService.deleteAnimalReportDataById(result.getId());
 
         // Проверяем, что метод deleteById был вызван с указанным идентификатором
         Mockito.verify(animalReportDataRepository, Mockito.times(1)).deleteById(result.getId());

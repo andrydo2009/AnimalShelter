@@ -3,6 +3,8 @@ package com.coffeebreak.animalshelter.services;
 import com.coffeebreak.animalshelter.exceptions.CatOwnerNotFoundException;
 import com.coffeebreak.animalshelter.models.CatOwner;
 import com.coffeebreak.animalshelter.repositories.CatOwnerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -17,6 +19,8 @@ public class CatOwnerService {
 
     private final CatOwnerRepository catOwnerRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(CatOwnerService.class);
+
     public CatOwnerService(CatOwnerRepository catOwnerRepository) {
         this.catOwnerRepository = catOwnerRepository;
     }
@@ -29,7 +33,10 @@ public class CatOwnerService {
      * @return созданный объект класса CatOwner
      */
     public CatOwner createCatOwner(CatOwner catOwner) {
-        return catOwnerRepository.save(catOwner);
+        logger.info("Create cat owner method was invoked");
+        catOwnerRepository.save(catOwner);
+        logger.info("Cat owner {} was created successfully", catOwner);
+        return catOwner;
     }
 
     /**
@@ -41,7 +48,10 @@ public class CatOwnerService {
      * @throws CatOwnerNotFoundException если объект класса CatOwner не был найден в БД
      */
     public CatOwner findCatOwnerById(Long catOwnerId) {
-        return catOwnerRepository.findById(catOwnerId).orElseThrow(CatOwnerNotFoundException::new);
+        logger.info("Find cat owner by id = {} method was invoked", catOwnerId);
+        CatOwner catOwner = catOwnerRepository.findById(catOwnerId).orElseThrow(CatOwnerNotFoundException::new);
+        logger.info("Cat with id = {} was successfully found", catOwnerId);
+        return catOwner;
     }
 
     /**
@@ -51,7 +61,10 @@ public class CatOwnerService {
      * @return коллекция объектов класса CatOwner
      */
     public Collection<CatOwner> findAllCatOwners() {
-        return catOwnerRepository.findAll();
+        logger.info("Find all cat owners method was invoked");
+        Collection<CatOwner> catOwners = catOwnerRepository.findAll();
+        logger.info("All cat owners were successfully found");
+        return catOwners;
     }
 
     /**
@@ -63,9 +76,12 @@ public class CatOwnerService {
      * @throws CatOwnerNotFoundException если объект класса CatOwner не был найден в БД
      */
     public CatOwner updateCatOwner(CatOwner catOwner) {
+        logger.info("Update cat owner: {} method was invoked", catOwner);
         if (catOwner.getId() != null) {
             if (findCatOwnerById(catOwner.getId()) != null) {
-                return catOwnerRepository.save(catOwner);
+                catOwnerRepository.save(catOwner);
+                logger.info("Cat owner {} was updated successfully", catOwner);
+                return catOwner;
             }
         }
         throw new CatOwnerNotFoundException();
@@ -78,7 +94,9 @@ public class CatOwnerService {
      * @param catOwnerId идентификатор искомого объекта класса CatOwner, не может быть null
      */
     public void deleteCatOwnerById(Long catOwnerId) {
+        logger.info("Delete cat owner by id = {} method was invoked", catOwnerId);
         catOwnerRepository.deleteById(catOwnerId);
+        logger.info("Cat owner with id = {} was deleted successfully", catOwnerId);
     }
 }
 
