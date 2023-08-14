@@ -33,6 +33,14 @@ public final class Constants {
             https://www.mos.ru/city/projects/pets/priyut/\s
             """;
 
+    static final String CHOOSE_CAT_TEXT = """
+            Рады, что вы выбрали кота в качестве домашнего животного.\s
+            Надеемся, что вы подружитесь.""";
+
+    static final String CHOOSE_DOG_TEXT = """
+            Рады, что вы выбрали собаку в качестве домашнего животного.\s
+            Надеемся, что вы подружитесь.""";
+
     static final String INFORMATION_ABOUT_REPORT = """
             Для отчета нужна следующая информация:\s
             - Фото животного  \s

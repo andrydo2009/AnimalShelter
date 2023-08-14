@@ -165,6 +165,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 sendMessage(chatId, REPORT_EXAMPLE);
                                 break;
 
+                            case "Выбрать кота":
+                                sendMessage(chatId, CHOOSE_CAT_TEXT);
+                                break;
+
+                            case "Выбрать собаку":
+                                sendMessage(chatId, CHOOSE_DOG_TEXT);
+                                break;
+
                             case "Вернуться в меню":
                                 if (isCat) {
                                     animalShelterKeyboard.sendMenuCatShelter(chatId);
