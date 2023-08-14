@@ -174,7 +174,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 }
                                 break;
 
-                            case "Расписание":
+                            case "Часы работы":
                                 if (isCat) {
                                     sendMessage(chatId, CAT_SHELTER_WORKING_HOURS);
                                     break;

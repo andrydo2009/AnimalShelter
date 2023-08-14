@@ -53,7 +53,7 @@ public class AnimalShelterKeyboard {
         logger.info("Send menu information about shelter method was invoked");
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
                 new KeyboardButton("Информация о приюте"), new KeyboardButton("Оставить контактные данные").requestContact(true));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Расписание"), new KeyboardButton("Оформление пропуска"));
+        replyKeyboardMarkup.addRow(new KeyboardButton("Часы работы"), new KeyboardButton("Оформление пропуска"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Техника безопасности"), new KeyboardButton("Позвать добровольца"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Вернуться в меню"));
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Какая информация вас интересует?");
