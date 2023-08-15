@@ -41,24 +41,24 @@ import static com.coffeebreak.animalshelter.listener.Constants.*;
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Autowired
-    AnimalReportDataService reportDataService;
+    private AnimalReportDataService reportDataService;
 
     @Autowired
-    AnimalReportDataRepository reportDataRepository;
+    private AnimalReportDataRepository reportDataRepository;
 
     @Autowired
-    CatOwnerRepository catOwnerRepository;
-
-    // проверка
-    @Autowired
-    CatOwnerService catOwnerService;
-
-    @Autowired
-    DogOwnerRepository dogOwnerRepository;
+    private CatOwnerRepository catOwnerRepository;
 
     // проверка
     @Autowired
-    DogOwnerService dogOwnerService;
+    private CatOwnerService catOwnerService;
+
+    @Autowired
+    private DogOwnerRepository dogOwnerRepository;
+
+    // проверка
+    @Autowired
+    private DogOwnerService dogOwnerService;
 
     private final TelegramBot telegramBot;
     private final AnimalShelterKeyboard animalShelterKeyboard;
