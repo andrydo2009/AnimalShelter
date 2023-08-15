@@ -326,28 +326,24 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         if (update.message().contact() != null) {
             String firstName = update.message().contact().firstName();
             String phone = update.message().contact().phoneNumber();
-            Long finalChatId = update.message().chat().id();
-            var sortChatId = dogOwnerRepository.findAll().stream()
-                    .filter(i -> Objects.equals(i.getChatId(),finalChatId))
-                    .toList();
-            var sortChatIdCat = catOwnerRepository.findAll().stream()
-                    .filter(i -> Objects.equals(i.getChatId(),finalChatId))
-                    .toList();
-            if (!sortChatId.isEmpty() || !sortChatIdCat.isEmpty()) {
-                sendMessage(finalChatId, "Вы уже в базе!");
+            Long chatId = update.message().chat().id();
+            DogOwner dogOwnerWithChatId = dogOwnerRepository.findByChatId(chatId);
+            CatOwner catOwnerWithChatId = catOwnerRepository.findByChatId(chatId);
+            if (dogOwnerWithChatId != null || catOwnerWithChatId != null) {
+                sendMessage(chatId, "Вы уже в базе!");
                 logger.info("Owner contact data already in database");
                 return;
             }
             if (isCat) {
-                catOwnerRepository.save(new CatOwner(finalChatId, firstName, phone, OwnershipStatus.SEARCH));
+                catOwnerRepository.save(new CatOwner(chatId, firstName, phone, OwnershipStatus.SEARCH));
             } else {
-                dogOwnerRepository.save(new DogOwner(finalChatId, firstName, phone, OwnershipStatus.SEARCH));
+                dogOwnerRepository.save(new DogOwner(chatId, firstName, phone, OwnershipStatus.SEARCH));
             }
-            sendMessage(finalChatId, "Вас успешно добавили в базу! Скоро вам перезвонят.");
+            sendMessage(chatId, "Вас успешно добавили в базу! Скоро вам перезвонят.");
             logger.info("Owner contact data was registered successfully");
             // Сообщение в чат добровольцам
             sendMessage(TELEGRAM_CHAT_VOLUNTEER, firstName + " " + phone + " Добавил(а) свой номер в базу");
-            sendForwardMessage(finalChatId, update.message().messageId());
+            sendForwardMessage(chatId, update.message().messageId());
         }
     }
 

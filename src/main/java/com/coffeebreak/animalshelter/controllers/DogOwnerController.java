@@ -103,6 +103,47 @@ public class DogOwnerController {
         return ResponseEntity.ok(foundDogOwner);
     }
 
+    @GetMapping("/findByChatId")
+    @Operation(
+            summary = "Найти владельца собаки по идентификатору чата.",
+            description = "Поиск владельца собаки по идентификатору чата."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Владелец собаки успешно найден.",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = DogOwner.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Владелец собаки не найден.",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = DogOwner.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
+            )
+    })
+    public ResponseEntity<DogOwner> getDogOwnerByChatId(@RequestParam("chatId") Long chatId) {
+        DogOwner foundDogOwner = dogOwnerService.findDogOwnerByChatId(chatId);
+        if (foundDogOwner == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(foundDogOwner);
+    }
+
     @GetMapping
     @Operation(
             summary = "Найти список всех владельцев собак.",

@@ -102,6 +102,47 @@ public class CatOwnerController {
         return ResponseEntity.ok(foundCatOwner);
     }
 
+    @GetMapping("/findByChatId")
+    @Operation(
+            summary = "Найти владельца кошки по идентификатору чата",
+            description = "Поиск владельца кошки по идентификатору чата"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Владелец кошки успешно найден",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = CatOwner.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Владелец кошки не найден",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    array = @ArraySchema(schema =
+                                    @Schema(implementation = CatOwner.class))
+                            )
+                    }
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Внутренняя ошибка сервера"
+            )
+    })
+    public ResponseEntity<CatOwner> getCatOwnerByChatId(@RequestParam("chatId") Long chatId) {
+        CatOwner foundCatOwner = catOwnerService.findCatOwnerByChatId(chatId);
+        if (foundCatOwner == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(foundCatOwner);
+    }
+
     @GetMapping
     @Operation(
             summary = "Найти список всех владельцев кошек",

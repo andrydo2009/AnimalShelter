@@ -3,6 +3,7 @@ package com.coffeebreak.animalshelter.services;
 import com.coffeebreak.animalshelter.exceptions.DogOwnerNotFoundException;
 import com.coffeebreak.animalshelter.models.DogOwner;
 import com.coffeebreak.animalshelter.repositories.DogOwnerRepository;
+import com.coffeebreak.animalshelter.repositories.DogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class DogOwnerService {
      * Поиск объекта класса DogOwner по его идентификатору
      * <br>
      * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findById(Object)}
-     * @param dogOwnerId идентификатор искомого объекта класса Dog, не может быть null
+     * @param dogOwnerId идентификатор искомого объекта класса DogOwner, не может быть null
      * @return найденный объект класса DogOwner
      * @throws DogOwnerNotFoundException если объект класса DogOwner не был найден в БД
      */
@@ -50,6 +51,20 @@ public class DogOwnerService {
         logger.info("Find dog owner by id = {} method was invoked", dogOwnerId);
         DogOwner dogOwner = dogOwnerRepository.findById(dogOwnerId).orElseThrow(DogOwnerNotFoundException::new);
         logger.info("Dog owner with id = {} was successfully found", dogOwnerId);
+        return dogOwner;
+    }
+
+    /**
+     * Поиск объекта класса DogOwner по идентификатору чата
+     * <br>
+     * Используется метод репозитория {@link DogOwnerRepository#findByChatId(Long)}
+     * @param chatId идентификатор искомого объекта класса DogOwner, не может быть null
+     * @return найденный объект класса DogOwner
+     */
+    public DogOwner findDogOwnerByChatId(Long chatId) {
+        logger.info("Find dog owner by chat id = {} method was invoked", chatId);
+        DogOwner dogOwner = dogOwnerRepository.findByChatId(chatId);
+        logger.info("Dog owner with chat id = {} was successfully found", chatId);
         return dogOwner;
     }
 

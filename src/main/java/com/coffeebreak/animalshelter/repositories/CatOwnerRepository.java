@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @see com.coffeebreak.animalshelter.services.CatOwnerService
  */
 public interface CatOwnerRepository  extends JpaRepository<CatOwner, Long> {
+    CatOwner findByChatId(Long chatId);
 }

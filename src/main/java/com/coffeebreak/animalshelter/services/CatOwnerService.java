@@ -50,7 +50,21 @@ public class CatOwnerService {
     public CatOwner findCatOwnerById(Long catOwnerId) {
         logger.info("Find cat owner by id = {} method was invoked", catOwnerId);
         CatOwner catOwner = catOwnerRepository.findById(catOwnerId).orElseThrow(CatOwnerNotFoundException::new);
-        logger.info("Cat with id = {} was successfully found", catOwnerId);
+        logger.info("Cat owner with id = {} was successfully found", catOwnerId);
+        return catOwner;
+    }
+
+    /**
+     * Поиск объекта класса CatOwner по идентификатору чата
+     * <br>
+     * Используется метод репозитория {@link CatOwnerRepository#findByChatId(Long)}
+     * @param chatId идентификатор искомого объекта класса CatOwner, не может быть null
+     * @return найденный объект класса CatOwner
+     */
+    public CatOwner findCatOwnerByChatId(Long chatId) {
+        logger.info("Find cat owner by chat id = {} method was invoked", chatId);
+        CatOwner catOwner = catOwnerRepository.findByChatId(chatId);
+        logger.info("Cat owner with chat id = {} was successfully found", chatId);
         return catOwner;
     }
 
