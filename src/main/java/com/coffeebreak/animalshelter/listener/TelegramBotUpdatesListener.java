@@ -285,9 +285,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 sendReplyMessage(chatId, "Неизвестная команда", update.message().messageId());
                                 break;
                         }
-                    } catch (NullPointerException e) {
-                        System.out.println("Возникла ошибка!");
+                    } catch (Exception e) {
+                        logger.error((e.getMessage()), e);
                     }
+//                    } catch (NullPointerException e) {
+//                        System.out.println("Возникла ошибка!");
+//                    }
                 }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
@@ -322,9 +325,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         logger.info("Get owner contact data method was invoked");
         if (update.message().contact() != null) {
             String firstName = update.message().contact().firstName();
-            String lastName = update.message().contact().lastName();
             String phone = update.message().contact().phoneNumber();
-            String username = update.message().chat().username();
             Long finalChatId = update.message().chat().id();
             var sortChatId = dogOwnerRepository.findAll().stream()
                     .filter(i -> Objects.equals(i.getChatId(),finalChatId))
@@ -335,17 +336,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             if (!sortChatId.isEmpty() || !sortChatIdCat.isEmpty()) {
                 sendMessage(finalChatId, "Вы уже в базе!");
                 logger.info("Owner contact data already in database");
-                return;
-            }
-            if (lastName != null) {
-                String name = firstName + " " + lastName + " " + username;
-                if(isCat){
-                    catOwnerRepository.save(new CatOwner(finalChatId, name, phone, OwnershipStatus.SEARCH));
-                } else {
-                    dogOwnerRepository.save(new DogOwner(finalChatId, name, phone, OwnershipStatus.SEARCH));
-                }
-                sendMessage(finalChatId, "Вас успешно добавили в базу! Скоро вам перезвонят.");
-                logger.info("Owner contact data with last name was registered successfully");
                 return;
             }
             if (isCat) {
