@@ -94,8 +94,6 @@ public class CatOwnerControllerTest {
         Mockito.verify(catOwnerService, Mockito.times(1)).findCatOwnerById(1L);
     }
 
-
-
     /**
      * Проверка метода <b>getCatOwnerByChatId()</b> в классе CatOwnerController
      * <br>
@@ -109,7 +107,7 @@ public class CatOwnerControllerTest {
         catOwnerService.createCatOwner(expected);
         Mockito.when(catOwnerService.findCatOwnerByChatId(any(Long.class))).thenReturn(expected);
         mvc.perform(MockMvcRequestBuilders
-                        .get("/cat_owner/findByChatId/")
+                        .get("/cat_owner/findByChatId")
                         .param("chatId", String.valueOf(chatId))
                         .content(objectMapper.writeValueAsString(expected))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -120,12 +118,10 @@ public class CatOwnerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("testAddress"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.phoneNumber").value("testPhoneNumber"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.chatId").value(chatId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(expected.getStatus().toString()))
                 .andExpect(status().isOk());
         Mockito.verify(catOwnerService, Mockito.times(1)).findCatOwnerByChatId(chatId);
     }
-
-
-
 
     /**
      * Проверка метода <b>getAllCatOwners()</b> в классе CatOwnerController
