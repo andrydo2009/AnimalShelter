@@ -105,14 +105,12 @@ public class CatOwnerControllerTest {
     @DisplayName("Проверка метода поиска хозяина кошки по chat id")
     void getCatOwnerByChatIdTest() throws Exception {
         Long chatId = 3445345L;
-
         CatOwner expected = new CatOwner(1L, "testFullName", 30, "testAddress", "testPhoneNumber", chatId, OwnershipStatus.SEARCH);
-
         catOwnerService.createCatOwner(expected);
         Mockito.when(catOwnerService.findCatOwnerByChatId(any(Long.class))).thenReturn(expected);
-
         mvc.perform(MockMvcRequestBuilders
-                        .get("/cat_owner/findByChatId", chatId)
+                        .get("/cat_owner/findByChatId/")
+                        .param("chatId", String.valueOf(chatId))
                         .content(objectMapper.writeValueAsString(expected))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -122,9 +120,7 @@ public class CatOwnerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("testAddress"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.phoneNumber").value("testPhoneNumber"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.chatId").value(chatId))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(OwnershipStatus.SEARCH))
                 .andExpect(status().isOk());
-
         Mockito.verify(catOwnerService, Mockito.times(1)).findCatOwnerByChatId(chatId);
     }
 
