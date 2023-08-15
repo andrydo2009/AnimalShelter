@@ -113,6 +113,36 @@ public class DogOwnerServiceTest {
     }
 
     /**
+     * Проверка метода <b>findDogOwnerByChatId()</b> класса DogOwnerService
+     * <br>
+     * Когда вызывается метод <b>DogOwnerRepository::findByChatId()</b>, возвращается ожидаемый объект класса DogOwner
+     */
+    @Test
+    @DisplayName("Проверка поиска хозяина собаки по chat id")
+    void findDogOwnerByChatIdTest() {
+        Long chatId = 3445345L;
+
+        DogOwner expected = new DogOwner(1L, "testFullName", 30, "testAddress", "testPhoneNumber", chatId);
+
+        Mockito.when(dogOwnerRepositoryMock.findByChatId(any(Long.class))).thenReturn(expected);
+
+        DogOwner actual = dogOwnerService.findDogOwnerByChatId(chatId);
+
+        Assertions.assertThat(actual.getId()).isEqualTo(expected.getId());
+        Assertions.assertThat(actual.getFullName()).isEqualTo(expected.getFullName());
+        Assertions.assertThat(actual.getAge()).isEqualTo(expected.getAge());
+        Assertions.assertThat(actual.getAddress()).isEqualTo(expected.getAddress());
+        Assertions.assertThat(actual.getPhoneNumber()).isEqualTo(expected.getPhoneNumber());
+        Assertions.assertThat(actual.getChatId()).isEqualTo(expected.getChatId());
+
+        // проверяем, что метод findByChatId() был вызван один раз с нужным аргументом
+        Mockito.verify(dogOwnerRepositoryMock, Mockito.times(1)).findByChatId(chatId);
+
+        // проверяем, что метод findByChatId() был вызван только один раз
+        Mockito.verify(dogOwnerRepositoryMock, Mockito.times(1)).findByChatId(Mockito.anyLong());
+    }
+
+    /**
      * Проверка метода <b>findAllDogOwners()</b> класса DogOwnerService
      * <br>
      * Когда вызывается метод <b>DogOwnerRepository::findAll()</b>, возвращается коллекция ожидаемых объектов класса DogOwner
