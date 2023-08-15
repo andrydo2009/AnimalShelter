@@ -3,6 +3,9 @@ package com.coffeebreak.animalshelter.services;
 import com.coffeebreak.animalshelter.exceptions.DogOwnerNotFoundException;
 import com.coffeebreak.animalshelter.models.DogOwner;
 import com.coffeebreak.animalshelter.repositories.DogOwnerRepository;
+import com.coffeebreak.animalshelter.repositories.DogRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -16,6 +19,8 @@ import java.util.Collection;
 public class DogOwnerService {
     private final DogOwnerRepository dogOwnerRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(DogOwnerService.class);
+
     public DogOwnerService(DogOwnerRepository dogOwnerRepository) {
         this.dogOwnerRepository = dogOwnerRepository;
     }
@@ -28,19 +33,39 @@ public class DogOwnerService {
      * @return созданный объект класса DogOwner
      */
     public DogOwner createDogOwner(DogOwner dogOwner) {
-        return dogOwnerRepository.save(dogOwner);
+        logger.info("Create dog owner method was invoked");
+        dogOwnerRepository.save(dogOwner);
+        logger.info("Dog owner {} was created successfully", dogOwner);
+        return dogOwner;
     }
 
     /**
      * Поиск объекта класса DogOwner по его идентификатору
      * <br>
      * Используется метод репозитория {@link org.springframework.data.jpa.repository.JpaRepository#findById(Object)}
-     * @param dogOwnerId идентификатор искомого объекта класса Dog, не может быть null
+     * @param dogOwnerId идентификатор искомого объекта класса DogOwner, не может быть null
      * @return найденный объект класса DogOwner
      * @throws DogOwnerNotFoundException если объект класса DogOwner не был найден в БД
      */
     public DogOwner findDogOwnerById(Long dogOwnerId) {
-        return dogOwnerRepository.findById(dogOwnerId).orElseThrow(DogOwnerNotFoundException::new);
+        logger.info("Find dog owner by id = {} method was invoked", dogOwnerId);
+        DogOwner dogOwner = dogOwnerRepository.findById(dogOwnerId).orElseThrow(DogOwnerNotFoundException::new);
+        logger.info("Dog owner with id = {} was successfully found", dogOwnerId);
+        return dogOwner;
+    }
+
+    /**
+     * Поиск объекта класса DogOwner по идентификатору чата
+     * <br>
+     * Используется метод репозитория {@link DogOwnerRepository#findByChatId(Long)}
+     * @param chatId идентификатор искомого объекта класса DogOwner, не может быть null
+     * @return найденный объект класса DogOwner
+     */
+    public DogOwner findDogOwnerByChatId(Long chatId) {
+        logger.info("Find dog owner by chat id = {} method was invoked", chatId);
+        DogOwner dogOwner = dogOwnerRepository.findByChatId(chatId);
+        logger.info("Dog owner with chat id = {} was successfully found", chatId);
+        return dogOwner;
     }
 
     /**
@@ -50,7 +75,10 @@ public class DogOwnerService {
      * @return коллекция объектов класса DogOwner
      */
     public Collection<DogOwner> findAllDogOwners() {
-        return dogOwnerRepository.findAll();
+        logger.info("Find all dog owners method was invoked");
+        Collection<DogOwner> dogOwners = dogOwnerRepository.findAll();
+        logger.info("All dog owners were successfully found");
+        return dogOwners;
     }
 
     /**
@@ -62,9 +90,12 @@ public class DogOwnerService {
      * @throws DogOwnerNotFoundException если объект класса DogOwner не был найден в БД
      */
     public DogOwner updateDogOwner(DogOwner dogOwner) {
+        logger.info("Update dog owner: {} method was invoked", dogOwner);
         if (dogOwner.getId() != null) {
             if (findDogOwnerById(dogOwner.getId()) != null) {
-                return dogOwnerRepository.save(dogOwner);
+                dogOwnerRepository.save(dogOwner);
+                logger.info("Dog owner {} was updated successfully", dogOwner);
+                return dogOwner;
             }
         }
         throw new DogOwnerNotFoundException();
@@ -77,6 +108,8 @@ public class DogOwnerService {
      * @param dogOwnerId идентификатор искомого объекта класса DogOwner, не может быть null
      */
     public void deleteDogOwnerById(Long dogOwnerId) {
+        logger.info("Delete dog owner by id = {} method was invoked", dogOwnerId);
         dogOwnerRepository.deleteById(dogOwnerId);
+        logger.info("Dog owner with id = {} was deleted successfully", dogOwnerId);
     }
 }

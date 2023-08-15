@@ -1,10 +1,7 @@
 package com.coffeebreak.animalshelter.controllers;
 
-import com.coffeebreak.animalshelter.listener.TelegramBotUpdatesListener;
 import com.coffeebreak.animalshelter.models.AnimalReportData;
-import com.coffeebreak.animalshelter.repositories.AnimalReportPhotoRepository;
 import com.coffeebreak.animalshelter.services.AnimalReportDataService;
-import com.coffeebreak.animalshelter.services.AnimalReportPhotoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
@@ -44,18 +41,8 @@ class AnimalReportDataControllerTest {
     @MockBean
     private AnimalReportDataService reportDataService;
 
-    @MockBean
-    private AnimalReportPhotoService animalReportPhotoService;
-
-    @MockBean
-    private AnimalReportPhotoRepository animalReportPhotoRepository;
-
-    @MockBean
-    private TelegramBotUpdatesListener telegramBotUpdatesListener;
-
     AnimalReportData reportTestOne = new AnimalReportData();
     AnimalReportData reportTestTwo = new AnimalReportData();
-
     Collection<AnimalReportData> reportListTest=new ArrayList<>();
 
     @BeforeEach
@@ -157,7 +144,7 @@ class AnimalReportDataControllerTest {
     @Test
     @DisplayName("Проверка метода удаления отчета")
     void deleteAnimalReportDataByIdTest()throws Exception  {
-            doNothing().when(reportDataService).deleteAnimalReportData(reportTestOne.getId());
+            doNothing().when(reportDataService).deleteAnimalReportDataById(reportTestOne.getId());
             mvc.perform(MockMvcRequestBuilders.delete("/report/{animalReportDataId}", reportTestOne.getId()))
                     .andExpect(status().isOk());
     }

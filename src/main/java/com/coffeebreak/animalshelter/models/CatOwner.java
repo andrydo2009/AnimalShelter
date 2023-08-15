@@ -21,6 +21,7 @@ public class CatOwner {
 
     private Long chatId;
 
+    @Enumerated
     private OwnershipStatus status;
 
     public CatOwner() {
@@ -71,6 +72,16 @@ public class CatOwner {
         this.age = age;
         this.address = address;
         this.phoneNumber = phoneNumber;
+    }
+
+    public CatOwner(Long id, String fullName, Integer age, String address, String phoneNumber, Long chatId, OwnershipStatus status) {
+        this.id = id;
+        this.fullName = fullName;
+        this.age = age;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.chatId = chatId;
+        this.status = status;
     }
 
     public Long getId() {

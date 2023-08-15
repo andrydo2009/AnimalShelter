@@ -1,6 +1,7 @@
 package com.coffeebreak.animalshelter.controllers;
 
 import com.coffeebreak.animalshelter.models.CatOwner;
+import com.coffeebreak.animalshelter.models.OwnershipStatus;
 import com.coffeebreak.animalshelter.services.CatOwnerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -83,7 +84,7 @@ public class CatOwnerControllerTest {
                         .content(objectMapper.writeValueAsString(expected))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.fullName").value("testFullName"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(30))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("testAddress"))
@@ -92,6 +93,43 @@ public class CatOwnerControllerTest {
 
         Mockito.verify(catOwnerService, Mockito.times(1)).findCatOwnerById(1L);
     }
+
+
+
+    /**
+     * Проверка метода <b>getCatOwnerByChatId()</b> в классе CatOwnerController
+     * <br>
+     * Когда вызывается метод <b>CatOwnerService::findCatOwnerByChatId()</b>, возвращается ожидаемый объект класса CatOwner
+     */
+    @Test
+    @DisplayName("Проверка метода поиска хозяина кошки по chat id")
+    void getCatOwnerByChatIdTest() throws Exception {
+        Long chatId = 3445345L;
+
+        CatOwner expected = new CatOwner(1L, "testFullName", 30, "testAddress", "testPhoneNumber", chatId, OwnershipStatus.SEARCH);
+
+        catOwnerService.createCatOwner(expected);
+        Mockito.when(catOwnerService.findCatOwnerByChatId(any(Long.class))).thenReturn(expected);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/cat_owner/findByChatId", chatId)
+                        .content(objectMapper.writeValueAsString(expected))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fullName").value("testFullName"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(30))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("testAddress"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.phoneNumber").value("testPhoneNumber"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.chatId").value(chatId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(OwnershipStatus.SEARCH))
+                .andExpect(status().isOk());
+
+        Mockito.verify(catOwnerService, Mockito.times(1)).findCatOwnerByChatId(chatId);
+    }
+
+
+
 
     /**
      * Проверка метода <b>getAllCatOwners()</b> в классе CatOwnerController

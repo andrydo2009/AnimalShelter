@@ -3,6 +3,8 @@ package com.coffeebreak.animalshelter.services;
 import com.coffeebreak.animalshelter.exceptions.CatNotFoundException;
 import com.coffeebreak.animalshelter.models.Cat;
 import com.coffeebreak.animalshelter.repositories.CatRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -17,6 +19,8 @@ public class CatService {
 
     private final CatRepository catRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(CatService.class);
+
     public CatService(CatRepository catRepository) {
         this.catRepository = catRepository;
     }
@@ -29,7 +33,10 @@ public class CatService {
      * @return созданный объект класса Cat
      */
     public Cat createCat(Cat cat) {
-        return catRepository.save(cat);
+        logger.info("Create cat method was invoked");
+        catRepository.save(cat);
+        logger.info("Cat {} was created successfully", cat);
+        return cat;
     }
 
     /**
@@ -41,7 +48,10 @@ public class CatService {
      * @throws CatNotFoundException если объект класса Cat не был найден в БД
      */
     public Cat findCatById(Long catId) {
-        return catRepository.findById(catId).orElseThrow(CatNotFoundException::new);
+        logger.info("Find cat by id = {} method was invoked", catId);
+        Cat cat = catRepository.findById(catId).orElseThrow(CatNotFoundException::new);
+        logger.info("Cat with id = {} was successfully found", catId);
+        return cat;
     }
 
     /**
@@ -51,7 +61,10 @@ public class CatService {
      * @return коллекция объектов класса Cat
      */
     public Collection<Cat> findAllCats() {
-        return catRepository.findAll();
+        logger.info("Find all cats method was invoked");
+        Collection<Cat> cats = catRepository.findAll();
+        logger.info("All cats were successfully found");
+        return cats;
     }
 
     /**
@@ -63,9 +76,12 @@ public class CatService {
      * @throws CatNotFoundException если объект класса Cat не был найден в БД
      */
     public Cat updateCat(Cat cat) {
+        logger.info("Update cat: {} method was invoked", cat);
         if (cat.getId() != null) {
             if (findCatById(cat.getId()) != null) {
-                return catRepository.save(cat);
+                catRepository.save(cat);
+                logger.info("Cat {} was updated successfully", cat);
+                return cat;
             }
         }
         throw new CatNotFoundException();
@@ -78,6 +94,8 @@ public class CatService {
      * @param catId идентификатор искомого объекта класса Cat, не может быть null
      */
     public void deleteCatById(Long catId) {
+        logger.info("Delete cat by id = {} method was invoked", catId);
         catRepository.deleteById(catId);
+        logger.info("Cat with id = {} was deleted successfully", catId);
     }
 }

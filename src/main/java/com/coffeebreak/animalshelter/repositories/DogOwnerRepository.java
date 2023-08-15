@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @see com.coffeebreak.animalshelter.services.DogOwnerService
  */
 public interface DogOwnerRepository extends JpaRepository<DogOwner, Long> {
+    DogOwner findByChatId(Long chatId);
 }

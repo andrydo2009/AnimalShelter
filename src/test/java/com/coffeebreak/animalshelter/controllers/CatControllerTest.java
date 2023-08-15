@@ -35,11 +35,11 @@ public class CatControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean
-    private CatService catService;
-
     @Autowired
     ObjectMapper objectMapper;
+
+    @MockBean
+    private CatService catService;
 
     Cat cat = new Cat(1L,"Cat", 3, "Persian", "description");
 
