@@ -24,10 +24,8 @@ import com.pengrad.telegrambot.response.GetFileResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -39,34 +37,29 @@ import static com.coffeebreak.animalshelter.listener.Constants.*;
 
 @Component
 public class TelegramBotUpdatesListener implements UpdatesListener {
-
-    @Autowired
-    private AnimalReportDataService reportDataService;
-
-    @Autowired
-    private AnimalReportDataRepository reportDataRepository;
-
-    @Autowired
-    private CatOwnerRepository catOwnerRepository;
-
-    // проверка
-    @Autowired
-    private CatOwnerService catOwnerService;
-
-    @Autowired
-    private DogOwnerRepository dogOwnerRepository;
-
-    // проверка
-    @Autowired
-    private DogOwnerService dogOwnerService;
-
     private final TelegramBot telegramBot;
     private final AnimalShelterKeyboard animalShelterKeyboard;
+    private final AnimalReportDataRepository reportDataRepository;
+    private final CatOwnerRepository catOwnerRepository;
+    private final DogOwnerRepository dogOwnerRepository;
+    private final AnimalReportDataService reportDataService;
+    private final CatOwnerService catOwnerService; // check
+    private final DogOwnerService dogOwnerService; // check
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
-    public TelegramBotUpdatesListener(TelegramBot telegramBot, AnimalShelterKeyboard animalShelterKeyboard) {
+    public TelegramBotUpdatesListener(
+            TelegramBot telegramBot, AnimalShelterKeyboard animalShelterKeyboard,
+            AnimalReportDataRepository reportDataRepository, CatOwnerRepository catOwnerRepository,
+            DogOwnerRepository dogOwnerRepository, AnimalReportDataService reportDataService,
+            CatOwnerService catOwnerService, DogOwnerService dogOwnerService) {
         this.telegramBot = telegramBot;
         this.animalShelterKeyboard = animalShelterKeyboard;
+        this.reportDataRepository = reportDataRepository;
+        this.catOwnerRepository = catOwnerRepository;
+        this.dogOwnerRepository = dogOwnerRepository;
+        this.reportDataService = reportDataService;
+        this.catOwnerService = catOwnerService;
+        this.dogOwnerService = dogOwnerService;
     }
 
     private Long daysOfReports;
