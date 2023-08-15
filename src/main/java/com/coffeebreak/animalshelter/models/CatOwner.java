@@ -21,6 +21,7 @@ public class CatOwner {
 
     private Long chatId;
 
+    @Enumerated
     private OwnershipStatus status;
 
     public CatOwner() {
