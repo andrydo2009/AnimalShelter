@@ -397,12 +397,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         }
     }
 
-    @Scheduled(cron = "* 30 21 * * *")
+    @Scheduled(cron = "* 30 21 * * *") // первая звездочка - секунда (0 - 59), вторая - минута (0 - 59), третья - час (0 - 23), четверная - день месяца(1 - 31), пятая - месяц (1 -12) или (JAN-DEC), шестая - день недели (0 - 7) или (MON-SUN -- 0 или 7 является воскресеньем)
     public void checkResults() {
         if (daysOfReports < 30) {
-            var twoDay = 172800000; // секунды в двух днях
+            var twoDay = 172800000; // миллисекунды в двух днях
             var nowTime = new Date().getTime() - twoDay;
-            var getDistinct = this.reportDataRepository.findAll().stream()
+            var getDistinct = reportDataRepository.findAll().stream()
                     .sorted(Comparator
                             .comparing(AnimalReportData::getChatId))
                     .max(Comparator

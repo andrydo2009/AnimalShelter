@@ -81,6 +81,16 @@ public class DogOwner {
         this.phoneNumber = phoneNumber;
     }
 
+    public DogOwner(Long id, String fullName, Integer age, String address, String phoneNumber, Long chatId, OwnershipStatus status) {
+        this.id = id;
+        this.fullName = fullName;
+        this.age = age;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.chatId = chatId;
+        this.status = status;
+    }
+
     public Long getId() {
         return id;
     }

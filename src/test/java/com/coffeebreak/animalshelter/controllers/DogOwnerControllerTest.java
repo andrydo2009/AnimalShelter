@@ -1,6 +1,7 @@
 package com.coffeebreak.animalshelter.controllers;
 
 import com.coffeebreak.animalshelter.models.DogOwner;
+import com.coffeebreak.animalshelter.models.OwnershipStatus;
 import com.coffeebreak.animalshelter.services.DogOwnerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -91,6 +92,36 @@ public class DogOwnerControllerTest {
                 .andExpect(status().isOk());
 
         Mockito.verify(dogOwnerService, Mockito.times(1)).findDogOwnerById(1L);
+    }
+
+    /**
+     * Проверка метода <b>getDogOwnerByChatId()</b> в классе DogOwnerController
+     * <br>
+     * Когда вызывается метод <b>DogOwnerService::findDogOwnerByChatId()</b>, возвращается ожидаемый объект класса DogOwner
+     */
+    @Test
+    @DisplayName("Проверка метода поиска хозяина собаки по chat id")
+    void getDogOwnerByChatIdTest() throws Exception {
+        Long chatId = 3445345L;
+        DogOwner expected = new DogOwner(1L, "testFullName", 30, "testAddress", "testPhoneNumber", chatId, OwnershipStatus.SEARCH);
+
+        Mockito.when(dogOwnerService.findDogOwnerByChatId(any(Long.class))).thenReturn(expected);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/dog_owner/findByChatId")
+                        .param("chatId", String.valueOf(chatId))
+                        .content(objectMapper.writeValueAsString(expected))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.fullName").value("testFullName"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(30))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("testAddress"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.phoneNumber").value("testPhoneNumber"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(expected.getStatus().toString()))
+                .andExpect(status().isOk());
+
+        Mockito.verify(dogOwnerService, Mockito.times(1)).findDogOwnerByChatId(chatId);
     }
 
     /**
