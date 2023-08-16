@@ -288,9 +288,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     } catch (Exception e) {
                         logger.error((e.getMessage()), e);
                     }
-//                    } catch (NullPointerException e) {
-//                        System.out.println("Возникла ошибка!");
-//                    }
                 }
         });
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
@@ -400,16 +397,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Scheduled(cron = "* 30 21 * * *") // первая звездочка - секунда (0 - 59), вторая - минута (0 - 59), третья - час (0 - 23), четверная - день месяца(1 - 31), пятая - месяц (1 -12) или (JAN-DEC), шестая - день недели (0 - 7) или (MON-SUN -- 0 или 7 является воскресеньем)
     public void checkResults() {
         if (daysOfReports < 30) {
-            var twoDay = 172800000; // миллисекунды в двух днях
-            var nowTime = new Date().getTime() - twoDay;
-            var getDistinct = reportDataRepository.findAll().stream()
-                    .sorted(Comparator
-                            .comparing(AnimalReportData::getChatId))
-                    .max(Comparator
-                            .comparing(AnimalReportData::getLastMessageMs));
-            getDistinct.stream()
-                    .filter(i -> i.getLastMessageMs() * 1000 < nowTime)
-                    .forEach(s -> sendMessage(s.getChatId(), "Вы забыли прислать отчет, пришлите его как можно скорее!"));
+            long msInTwoDays = 172800000; // миллисекунды в двух днях
+            Long msNowMinusMsInTwoDays = new Date().getTime() - msInTwoDays;
+            List<AnimalReportData> expiredReports = reportDataRepository.findAnimalReportDataByChatIdIsNotNullAndLastMessageMsIsLessThan(msNowMinusMsInTwoDays);
+            expiredReports.forEach(expiredReport -> sendMessage(expiredReport.getChatId(), "Вы забыли прислать отчет, пришлите его как можно скорее!"));
         }
     }
 }
