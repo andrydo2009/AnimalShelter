@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface AnimalReportDataRepository extends JpaRepository<AnimalReportData,Long> {
     AnimalReportData findByChatId(Long id);
-    List<AnimalReportData> findAllByChatId(Long id);
+    List<AnimalReportData> findAnimalReportDataByChatIdIsNotNullAndLastMessageMsIsLessThan(Long millisecondsNowMinusTwoDays);
 }
