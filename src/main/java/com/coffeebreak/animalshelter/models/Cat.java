@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Cat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "nick_name", nullable = false, length = 25)
