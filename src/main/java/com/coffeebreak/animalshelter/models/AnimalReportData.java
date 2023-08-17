@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
+@Table(name = "animal_report_data")
 public class AnimalReportData {
 
     @Id

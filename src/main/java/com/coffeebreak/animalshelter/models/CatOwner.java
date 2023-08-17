@@ -27,14 +27,12 @@ public class CatOwner {
     public CatOwner() {
     }
 
-    // добавил
     public CatOwner(Long chatId, String fullName, String phoneNumber) {
         this.chatId = chatId;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
     }
 
-    // добавил
     public CatOwner(Long chatId, String fullName, String phoneNumber, OwnershipStatus status) {
         this.chatId = chatId;
         this.fullName = fullName;
@@ -42,7 +40,6 @@ public class CatOwner {
         this.status = status;
     }
 
-    // добавил
     public CatOwner(Long chatId, String fullName, String phoneNumber, String address) {
         this.chatId = chatId;
         this.fullName = fullName;

@@ -27,14 +27,12 @@ public class DogOwner {
     public DogOwner() {
     }
 
-    // добавил
     public DogOwner(Long chatId, String fullName, String phoneNumber) {
         this.chatId = chatId;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
     }
 
-    // добавил
     public DogOwner(Long chatId, String fullName, String phoneNumber, OwnershipStatus status) {
         this.chatId = chatId;
         this.fullName = fullName;
@@ -42,7 +40,6 @@ public class DogOwner {
         this.status = status;
     }
 
-// добавил
     public DogOwner(Long chatId, String fullName, String phoneNumber, String address) {
         this.chatId = chatId;
         this.fullName = fullName;
@@ -56,13 +53,6 @@ public class DogOwner {
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
-
-    //    public DogOwner(Long id, String fullName, String address, String phoneNumber) {
-//        this.id = id;
-//        this.fullName = fullName;
-//        this.address = address;
-//        this.phoneNumber = phoneNumber;
-//    }
 
     public DogOwner(Long id, String fullName, Integer age, String address, String phoneNumber, Long chatId) {
         this.id = id;

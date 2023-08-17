@@ -324,4 +324,6 @@ public final class Constants {
     // chatId добровольца
     static final Long TELEGRAM_CHAT_VOLUNTEER = -8447335152L;
 
+    private Constants() {
+    }
 }
