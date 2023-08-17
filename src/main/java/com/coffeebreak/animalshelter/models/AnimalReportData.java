@@ -10,7 +10,7 @@ import java.util.Objects;
 public class AnimalReportData {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long chatId;
     private String rationOfAnimal; //рацион питания животного
